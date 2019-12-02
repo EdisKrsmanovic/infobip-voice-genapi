@@ -1,0 +1,25 @@
+#
+# The properties defined here will be applied on top of those from application.yml if the active profile is "development".
+#
+# Practical usage:
+# - setting various URLs to those in the integration environment
+#
+ircs.application.location.id: 1
+ircs.service.addresses: http://p4-io-rs-1:3310/rmi,http://p4-io-rs-2:3310/rmi,http://p4-io-rs-3:3310/rmi
+
+infobip.remoting:
+  server:
+    autostart: true # automatically start RMI server (this should be set to false in production; Deployment Manager will start your server)
+    properties:
+      ircs.application.location.id: ${ircs.application.location.id}
+      ircs.service.addresses: ${ircs.service.addresses}
+      ircs.server.modules.cluster.info.enabled: false
+
+  client:
+    properties:
+      ircs.application.location.id: ${ircs.application.location.id}
+      ircs.service.addresses: ${ircs.service.addresses}
+      ircs.client.modules.cluster.info.enabled: false
+      # IMPORTANT: remove 'infobipremotingservice'; this is only example how to configure RMI client
+      infobipremotingservice:
+        rmi.target: infobipremotingservice # use service discovery

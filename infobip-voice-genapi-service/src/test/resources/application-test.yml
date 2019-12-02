@@ -1,0 +1,10 @@
+server.port: 9090
+
+infobip.remoting:
+  client:
+    enabled: true
+    properties:
+      self:
+        httpinvoker.proxy.url: http://localhost:${server.port}/rmi
+  server:
+    autostart: true # because we're calling ourselves, see 'infobipremotingservice' above

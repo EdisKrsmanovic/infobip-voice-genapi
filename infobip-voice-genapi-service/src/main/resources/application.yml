@@ -1,0 +1,12 @@
+#See https://confluence.infobip.com/display/IT/Remoting+Library+Documentation properties section
+#JVM properties can be specified in docker/etc/app/jvm.conf
+
+spring.profiles.active: development
+
+server.port: 8080
+
+infobip.remoting:
+  server:
+    autostart: false
+    properties:
+      mml.rmi.enabled: false
