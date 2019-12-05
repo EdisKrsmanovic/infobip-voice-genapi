@@ -23,3 +23,10 @@ infobip.remoting:
       # IMPORTANT: remove 'infobipremotingservice'; this is only example how to configure RMI client
       infobipremotingservice:
         rmi.target: infobipremotingservice # use service discovery
+
+spring:
+  datasource:
+    driverClassName: net.sourceforge.jtds.jdbc.Driver
+    url: jdbc:jtds:sqlserver://sql-sa-test.infobip.local:1433/infobip_voice_calls_config_db_ekrsmanovic
+    username: voip
+    password: voip
