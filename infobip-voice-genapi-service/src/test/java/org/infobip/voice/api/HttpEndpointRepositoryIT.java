@@ -1,5 +1,6 @@
 package org.infobip.voice.api;
 
+import com.google.api.Http;
 import org.infobip.voice.Application;
 import org.infobip.voice.exception.DatabaseException;
 import org.infobip.voice.model.HttpEndpoint;
@@ -18,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -52,19 +54,18 @@ public class HttpEndpointRepositoryIT {
         httpEndpointRepository.save(new HttpEndpoint(null, HttpMethod.POST, givenHttpHeaders(), "{body}"));
         List<HttpEndpoint> allEndpoints = httpEndpointRepository.getAll();
         assertThat(allEndpoints.size()).isEqualTo(2);
+        assertThat(allEndpoints.get(0).getHttpHeaders().size()).isEqualTo(3);
+        assertThat(allEndpoints.get(1).getHttpHeaders().size()).isEqualTo(3);
     }
 
     @Test
-    public void getByIdTest() {
-        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withSchemaName("voip").withTableName("HttpEndpoint").usingGeneratedKeyColumns("Id");
-        Map<String, Object> parameters = Map.of(
-                "HttpMethod", "GET",
-                "Body", "{body}");
-        Number httpEndpointId = jdbcInsert.executeAndReturnKey(parameters);
+    public void getByIdTest() throws DatabaseException {
+        Integer httpEndpointId = httpEndpointRepository.save(new HttpEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{body}"));
 
-        HttpEndpoint httpEndpoint = httpEndpointRepository.getById(httpEndpointId.intValue());
+        HttpEndpoint httpEndpoint = httpEndpointRepository.getById(httpEndpointId);
 
         assertThat(httpEndpoint).isNotNull();
+        assertThat(httpEndpoint.getHttpHeaders().size()).isEqualTo(3);
     }
 
     @Test
@@ -86,6 +87,28 @@ public class HttpEndpointRepositoryIT {
         assertThat(httpEndpoint.getBody()).isEqualTo("{newBody}");
         assertThat(httpEndpoint.getHttpHeaders().get(0).getName()).isEqualTo("Novi");
         assertThat(httpEndpoint.getHttpHeaders().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void getAllWithNoHeadersTest() throws DatabaseException {
+        httpEndpointRepository.save(new HttpEndpoint(null, HttpMethod.GET, Collections.emptyList(), "{}"));
+        httpEndpointRepository.save(new HttpEndpoint(null, HttpMethod.POST, Collections.emptyList(), "{\"name\":\"value\"}"));
+
+        List<HttpEndpoint> httpEndpoints = httpEndpointRepository.getAll();
+
+        assertThat(httpEndpoints.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void getByIdWithNoHeadersTest() throws DatabaseException {
+        httpEndpointRepository.save(new HttpEndpoint(null, HttpMethod.GET, Collections.emptyList(), "{}"));
+        Integer httpEndpointId = httpEndpointRepository.save(new HttpEndpoint(null, HttpMethod.POST, Collections.emptyList(), "{\"name\":\"value\"}"));
+
+        HttpEndpoint httpEndpoint = httpEndpointRepository.getById(httpEndpointId);
+
+        assertThat(httpEndpoint).isNotNull();
+        assertThat(httpEndpoint.getId()).isEqualTo(httpEndpointId);
+        assertThat(httpEndpoint.getHttpHeaders().size()).isEqualTo(0);
     }
 
     private List<HttpHeader> givenHttpHeaders() {

@@ -7,15 +7,14 @@ import org.infobip.voice.model.HttpEndpoint;
 import org.infobip.voice.model.HttpHeader;
 import org.infobip.voice.repository.mapper.HttpEndpointRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Slf4j
 @Repository
@@ -43,18 +42,40 @@ public class HttpEndpointRepository {
 
     public HttpEndpoint getById(Integer id) {
         try {
-            return jdbcTemplate.queryForObject(String.format("select * from voip.HttpEndpoint where id=%d", id), new HttpEndpointRowMapper(jdbcTemplate));
+            return jdbcTemplate.queryForObject(String.format("select * from voip.HttpEndpoint left join voip.HttpHeaders on HttpEndpointId=Id where id=%d", id), new HttpEndpointRowMapper());
         } catch (EmptyResultDataAccessException e) {
             log.warn("No results found");
         } catch (Exception e) {
-            log.warn(String.format("Could not read HttpEndpoint with id %s from database", id));
+            log.warn(String.format("Could not read HttpEndpoint with id %s from database, message: %s", id, e.getMessage()));
         }
         return null;
     }
 
     public List<HttpEndpoint> getAll() {
         try {
-            return jdbcTemplate.query("select * from voip.HttpEndpoint", new HttpEndpointRowMapper(jdbcTemplate));
+            SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from voip.HttpEndpoint left join voip.HttpHeaders on HttpEndpointId=Id");
+            Map<Integer, HttpEndpoint> httpEndpointMap = new HashMap<>();
+
+            while (sqlRowSet.next()) {
+                int httpEndpointId = sqlRowSet.getInt("Id");
+                String httpHeaderName = sqlRowSet.getString("Name");
+                String httpHeaderValue = sqlRowSet.getString("Value");
+
+                HttpEndpoint httpEndpoint = httpEndpointMap.get(httpEndpointId);
+
+                if (httpEndpoint == null) {
+                    List<HttpHeader> httpHeaders = new ArrayList<>();
+                    httpEndpoint = new HttpEndpoint(
+                            httpEndpointId,
+                            HttpMethod.valueOf(sqlRowSet.getString("HttpMethod")),
+                            httpHeaders,
+                            sqlRowSet.getString("Body"));
+                    httpEndpointMap.put(httpEndpointId, httpEndpoint);
+                }
+
+                httpEndpoint.getHttpHeaders().add(new HttpHeader(httpHeaderName, httpHeaderValue));
+            }
+            return new ArrayList<>(httpEndpointMap.values());
         } catch (EmptyResultDataAccessException e) {
             log.warn("No results found");
         } catch (Exception e) {
