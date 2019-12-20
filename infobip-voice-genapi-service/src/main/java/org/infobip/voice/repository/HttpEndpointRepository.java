@@ -33,6 +33,7 @@ public class HttpEndpointRepository {
         try {
             Number httpEndpointId = jdbcInsert.executeAndReturnKey(parameters);
             httpEndpoint.getHttpHeaders().forEach(e -> insertHeaderToDb(httpEndpointId, e));
+            httpEndpoint.setId(httpEndpointId.intValue());
             return httpEndpointId.intValue();
         } catch (Exception e) {
             log.error("Error while trying to save HttpEndpoint to database, rolling back");
@@ -104,5 +105,16 @@ public class HttpEndpointRepository {
 
     private void insertHeaderToDb(Number httpEndpointId, HttpHeader header) {
         jdbcTemplate.update("insert into voip.HttpHeaders VALUES(?,?,?)", httpEndpointId, header.getName(), header.getValue());
+    }
+
+    @Transactional(rollbackFor = DatabaseException.class)
+    public void remove(Integer httpEndpointId) throws DatabaseException {
+        try {
+            jdbcTemplate.update("DELETE FROM voip.HttpHeaders WHERE HttpEndpointId = ?", httpEndpointId);
+            jdbcTemplate.update("DELETE FROM voip.HttpEndpoint WHERE Id = ?", httpEndpointId);
+        } catch (Exception e) {
+            log.error(String.format("Error while trying to remove httpendpoint with id %s, message: %s", httpEndpointId, e.getMessage()));
+            throw new DatabaseException(e.getMessage());
+        }
     }
 }

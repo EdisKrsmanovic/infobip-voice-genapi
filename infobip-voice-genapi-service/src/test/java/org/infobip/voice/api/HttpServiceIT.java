@@ -3,6 +3,7 @@ package org.infobip.voice.api;
 import org.infobip.voice.Application;
 import org.infobip.voice.model.HttpEndpoint;
 import org.infobip.voice.model.HttpHeader;
+import org.infobip.voice.provider.HttpEndpointProvider;
 import org.infobip.voice.service.HttpService;
 import org.junit.After;
 import org.junit.Before;
@@ -29,6 +30,9 @@ public class HttpServiceIT {
 
     @Autowired
     private HttpService httpService;
+
+    @Autowired
+    private HttpEndpointProvider httpEndpointProvider;
 
     @Before
     public void beforeEveryTest() {

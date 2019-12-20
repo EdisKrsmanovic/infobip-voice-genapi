@@ -1,6 +1,5 @@
 package org.infobip.voice.api;
 
-import com.google.api.Http;
 import org.infobip.voice.Application;
 import org.infobip.voice.exception.DatabaseException;
 import org.infobip.voice.model.HttpEndpoint;
@@ -14,14 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

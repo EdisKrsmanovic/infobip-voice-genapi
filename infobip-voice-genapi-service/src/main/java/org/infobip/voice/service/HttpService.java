@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.infobip.voice.exception.DatabaseException;
 import org.infobip.voice.model.HttpEndpoint;
-import org.infobip.voice.repository.HttpEndpointRepository;
+import org.infobip.voice.provider.HttpEndpointProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -12,15 +12,15 @@ import javax.validation.Valid;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 @Validated
+@AllArgsConstructor
 public class HttpService {
 
-    private HttpEndpointRepository httpEndpointRepository;
+    private HttpEndpointProvider httpEndpointProvider;
 
     public void createHttpEndpoint(@Valid HttpEndpoint httpEndpoint) {
         try {
-            httpEndpointRepository.save(httpEndpoint);
+            httpEndpointProvider.put(httpEndpoint);
         } catch (DatabaseException exception) {
             log.warn("Failed to save HttpEndpoint, message: " + exception.getMessage());
         }
