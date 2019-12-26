@@ -5,7 +5,6 @@ import org.infobip.voice.genapi.TestConfiguration;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.model.HttpEndpoint;
 import org.infobip.voice.genapi.model.HttpHeader;
-import org.infobip.voice.genapi.repository.HttpEndpointRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

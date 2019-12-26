@@ -82,7 +82,7 @@ public class HttpEndpointProvider {
     }
 
     @Scheduled(fixedDelay = 60000) //every minute
-    public void startCaching() {
+    private void startCaching() {
         this.reloadAll();
     }
 

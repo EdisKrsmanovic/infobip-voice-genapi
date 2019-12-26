@@ -4,7 +4,6 @@ import org.infobip.voice.genapi.Application;
 import org.infobip.voice.genapi.TestConfiguration;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
-import org.infobip.voice.genapi.provider.HttpEndpointProvider;
 import org.infobip.voice.genapi.model.HttpEndpoint;
 import org.infobip.voice.genapi.model.HttpHeader;
 import org.infobip.voice.genapi.repository.HttpEndpointRepository;
@@ -82,7 +81,7 @@ public class HttpEndpointProviderIT {
     }
 
     @Test
-    public void reloadCachesValues() throws DatabaseException {
+    public void reloadCachedValues() throws DatabaseException {
         httpEndpointRepository.save(new HttpEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{}"));
         httpEndpointRepository.save(new HttpEndpoint(null, HttpMethod.POST, givenHttpHeaders(), "{body}"));
 
