@@ -4,8 +4,8 @@ import org.infobip.voice.genapi.Application;
 import org.infobip.voice.genapi.TestConfiguration;
 import org.infobip.voice.genapi.connector.model.GenApiResponse;
 import org.infobip.voice.genapi.exception.DatabaseException;
-import org.infobip.voice.genapi.provider.HttpEndpointProvider;
-import org.infobip.voice.genapi.model.HttpEndpoint;
+import org.infobip.voice.genapi.provider.SingleResponseEndpointProvider;
+import org.infobip.voice.genapi.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.model.HttpHeader;
 import org.junit.After;
 import org.junit.Before;
@@ -25,39 +25,39 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class HttpEndpointServiceIT {
+public class SingleResponseEndpointServiceIT {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private HttpEndpointService httpEndpointService;
+    private SingleResponseEndpointService httpEndpointService;
 
     @Autowired
-    private HttpEndpointProvider httpEndpointProvider;
+    private SingleResponseEndpointProvider singleResponseEndpointProvider;
 
     @Before
     public void beforeEveryTest() {
-        jdbcTemplate.update("DELETE FROM voip.HttpHeaders");
-        jdbcTemplate.update("DELETE FROM voip.HttpEndpoint");
+        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
+        jdbcTemplate.update("DELETE FROM voip.SingleResponseEndpoint");
     }
 
     @After
     public void afterEveryTest() {
-        jdbcTemplate.update("DELETE FROM voip.HttpHeaders");
-        jdbcTemplate.update("DELETE FROM voip.HttpEndpoint");
+        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
+        jdbcTemplate.update("DELETE FROM voip.SingleResponseEndpoint");
     }
 
     @Test
     public void createHttpEndpointSavesHeadersInAnotherTable() {
-        Integer numberOfHeadersBefore = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM voip.HttpHeaders", Integer.class);
-        httpEndpointService.createHttpEndpoint(new HttpEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{\"body\": \"bla\"}"));
-        Integer numberOfHeadersAfter = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM voip.HttpHeaders", Integer.class);
+        Integer numberOfHeadersBefore = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM voip.EndpointHeader", Integer.class);
+        httpEndpointService.createHttpEndpoint(new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{\"body\": \"bla\"}"));
+        Integer numberOfHeadersAfter = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM voip.EndpointHeader", Integer.class);
         assertThat(numberOfHeadersBefore).isEqualTo(numberOfHeadersAfter - 3);
     }
 
     @Test
     public void nullHttpMethodReturnsCorrectResponse() {
-        GenApiResponse<HttpEndpoint> httpEndpointGenApiResponse = httpEndpointService.createHttpEndpoint(new HttpEndpoint(null, null, givenHttpHeaders(), "{\"valid\"}: \"body\""));
+        GenApiResponse<SingleResponseEndpoint> httpEndpointGenApiResponse = httpEndpointService.createHttpEndpoint(new SingleResponseEndpoint(null, null, givenHttpHeaders(), "{\"valid\"}: \"body\""));
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
         assertThat(httpEndpointGenApiResponse.getMessage().toLowerCase()).contains("method");
     }
@@ -66,30 +66,30 @@ public class HttpEndpointServiceIT {
     public void invalidHeadersReturnsCorrectResponse() {
         List<HttpHeader> headers = givenHttpHeaders();
         headers.get(0).setName("");
-        GenApiResponse<HttpEndpoint> httpEndpointGenApiResponse = httpEndpointService.createHttpEndpoint(new HttpEndpoint(null, HttpMethod.GET, headers, "{\"valid\": \"body\"}"));
+        GenApiResponse<SingleResponseEndpoint> httpEndpointGenApiResponse = httpEndpointService.createHttpEndpoint(new SingleResponseEndpoint(null, HttpMethod.GET, headers, "{\"valid\": \"body\"}"));
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
         assertThat(httpEndpointGenApiResponse.getMessage().toLowerCase()).contains("name");
     }
 
     @Test
     public void invalidBodyReturnsCorrectResponse() {
-        GenApiResponse<HttpEndpoint> httpEndpointGenApiResponse = httpEndpointService.createHttpEndpoint(new HttpEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "invalid Body Example"));
+        GenApiResponse<SingleResponseEndpoint> httpEndpointGenApiResponse = httpEndpointService.createHttpEndpoint(new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "invalid Body Example"));
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
         assertThat(httpEndpointGenApiResponse.getMessage().toLowerCase()).contains("body");
     }
 
     @Test
     public void getByIdReturns200IfFound() throws DatabaseException {
-        Integer httpEndpointId = httpEndpointProvider.put(new HttpEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{\"body\": \"bla\"}"));
+        Integer httpEndpointId = singleResponseEndpointProvider.put(new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{\"body\": \"bla\"}"));
 
-        GenApiResponse<HttpEndpoint> httpEndpointGenApiResponse = httpEndpointService.getById(httpEndpointId);
+        GenApiResponse<SingleResponseEndpoint> httpEndpointGenApiResponse = httpEndpointService.getById(httpEndpointId);
 
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(200);
     }
 
     @Test
     public void getByIdReturns404IfNotFound() {
-        GenApiResponse<HttpEndpoint> httpEndpointGenApiResponse = httpEndpointService.getById(0);
+        GenApiResponse<SingleResponseEndpoint> httpEndpointGenApiResponse = httpEndpointService.getById(0);
 
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(404);
     }

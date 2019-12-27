@@ -1,7 +1,7 @@
 package org.infobip.voice.genapi.validator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.infobip.voice.genapi.model.HttpEndpoint;
+import org.infobip.voice.genapi.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.model.JsonStringConstraint;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @Component
 @Validated
-public class HttpEndpointValidator implements ConstraintValidator<JsonStringConstraint, String> {
+public class SingleResponseEndpointValidator implements ConstraintValidator<JsonStringConstraint, String> {
     @Override
     public void initialize(JsonStringConstraint constraintAnnotation) {
 
@@ -24,8 +24,8 @@ public class HttpEndpointValidator implements ConstraintValidator<JsonStringCons
         return(isJSONValid(body));
     }
 
-    public boolean checkIfValid(@Valid HttpEndpoint httpEndpoint) {
-        return(isJSONValid(httpEndpoint.getBody()));
+    public boolean checkIfValid(@Valid SingleResponseEndpoint singleResponseEndpoint) {
+        return(isJSONValid(singleResponseEndpoint.getResponse()));
     }
 
     private boolean isJSONValid(String jsonInString ) {

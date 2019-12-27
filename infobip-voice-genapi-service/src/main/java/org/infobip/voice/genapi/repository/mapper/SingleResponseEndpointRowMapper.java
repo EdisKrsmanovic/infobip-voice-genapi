@@ -1,7 +1,7 @@
 package org.infobip.voice.genapi.repository.mapper;
 
 import lombok.extern.slf4j.Slf4j;
-import org.infobip.voice.genapi.model.HttpEndpoint;
+import org.infobip.voice.genapi.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.model.HttpHeader;
 import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,24 +13,24 @@ import java.util.Collections;
 import java.util.List;
 
 @Slf4j
-public class HttpEndpointRowMapper implements RowMapper<HttpEndpoint> {
+public class SingleResponseEndpointRowMapper implements RowMapper<SingleResponseEndpoint> {
 
     @Override
-    public HttpEndpoint mapRow(ResultSet rs, int rowNum) throws SQLException {
-        HttpEndpoint httpEndpoint = new HttpEndpoint(
+    public SingleResponseEndpoint mapRow(ResultSet rs, int rowNum) throws SQLException {
+        SingleResponseEndpoint singleResponseEndpoint = new SingleResponseEndpoint(
                 rs.getInt("Id"),
                 HttpMethod.valueOf(rs.getString("HttpMethod")),
                 Collections.emptyList(),
-                rs.getString("Body"));
+                rs.getString("Response"));
 
         List<HttpHeader> httpHeaders = new ArrayList<>();
         do {
             addHttpHeaderToList(rs, httpHeaders);
         } while (rs.next());
 
-        httpEndpoint.setHttpHeaders(httpHeaders);
+        singleResponseEndpoint.setHttpHeaders(httpHeaders);
 
-        return httpEndpoint;
+        return singleResponseEndpoint;
 
     }
 

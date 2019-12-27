@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.infobip.voice.genapi.connector.model.GenApiResponse;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
-import org.infobip.voice.genapi.provider.HttpEndpointProvider;
-import org.infobip.voice.genapi.model.HttpEndpoint;
-import org.infobip.voice.genapi.validator.HttpEndpointValidator;
+import org.infobip.voice.genapi.provider.SingleResponseEndpointProvider;
+import org.infobip.voice.genapi.model.SingleResponseEndpoint;
+import org.infobip.voice.genapi.validator.SingleResponseEndpointValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -17,18 +17,18 @@ import javax.validation.ConstraintViolationException;
 @Service
 @Validated
 @AllArgsConstructor
-public class HttpEndpointService {
+public class SingleResponseEndpointService {
 
-    private HttpEndpointProvider httpEndpointProvider;
+    private SingleResponseEndpointProvider singleResponseEndpointProvider;
 
-    private HttpEndpointValidator httpEndpointValidator;
+    private SingleResponseEndpointValidator singleResponseEndpointValidator;
 
-    public GenApiResponse<HttpEndpoint> createHttpEndpoint(HttpEndpoint httpEndpoint) {
+    public GenApiResponse<SingleResponseEndpoint> createHttpEndpoint(SingleResponseEndpoint singleResponseEndpoint) {
         int statusCode = 200;
         String message = "OK";
         try {
-            httpEndpointValidator.checkIfValid(httpEndpoint);
-            httpEndpointProvider.put(httpEndpoint);
+            singleResponseEndpointValidator.checkIfValid(singleResponseEndpoint);
+            singleResponseEndpointProvider.put(singleResponseEndpoint);
         } catch (DatabaseException exception) {
             log.warn(String.format("Failed to save HttpEndpoint, message: %s", exception.getMessage()));
             statusCode = 503;
@@ -38,23 +38,23 @@ public class HttpEndpointService {
             statusCode = 400;
             message = exception.getMessage();
         }
-        return generateGenApiResponse(statusCode, message, httpEndpoint);
+        return generateGenApiResponse(statusCode, message, singleResponseEndpoint);
     }
 
-    public GenApiResponse<HttpEndpoint> getById(Integer httpEndpointId) {
+    public GenApiResponse<SingleResponseEndpoint> getById(Integer httpEndpointId) {
         try {
-            HttpEndpoint httpEndpoint = httpEndpointProvider.getById(httpEndpointId);
-            return generateGenApiResponse(200, "OK", httpEndpoint);
+            SingleResponseEndpoint singleResponseEndpoint = singleResponseEndpointProvider.getById(httpEndpointId);
+            return generateGenApiResponse(200, "OK", singleResponseEndpoint);
         } catch (HttpEndpointNotFoundException e) {
             return generateGenApiResponse(404, "Not found", null);
         }
     }
 
-    private GenApiResponse<HttpEndpoint> generateGenApiResponse(Integer statusCode, String message, HttpEndpoint httpEndpoint) {
-        return GenApiResponse.<HttpEndpoint>builder()
+    private GenApiResponse<SingleResponseEndpoint> generateGenApiResponse(Integer statusCode, String message, SingleResponseEndpoint singleResponseEndpoint) {
+        return GenApiResponse.<SingleResponseEndpoint>builder()
                 .statusCode(statusCode)
                 .message(message)
-                .httpEndpoint(httpEndpoint)
+                .httpEndpoint(singleResponseEndpoint)
                 .build();
     }
 }

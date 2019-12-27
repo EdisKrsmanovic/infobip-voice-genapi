@@ -14,12 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Validated
-public class HttpEndpoint {
+public class SingleResponseEndpoint implements Endpoint {
     private Integer id;
     @NotNull(message = "HttpMethod cannot be null")
     private HttpMethod httpMethod;
     @Valid
     private List<HttpHeader> httpHeaders;
     @JsonStringConstraint
-    private String body;
+    private String response;
 }

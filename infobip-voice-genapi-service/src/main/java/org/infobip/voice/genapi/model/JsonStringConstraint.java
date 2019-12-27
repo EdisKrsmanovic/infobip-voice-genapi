@@ -1,13 +1,13 @@
 package org.infobip.voice.genapi.model;
 
-import org.infobip.voice.genapi.validator.HttpEndpointValidator;
+import org.infobip.voice.genapi.validator.SingleResponseEndpointValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = HttpEndpointValidator.class)
+@Constraint(validatedBy = SingleResponseEndpointValidator.class)
 @Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JsonStringConstraint {
