@@ -28,10 +28,10 @@ public class SingleResponseEndpointProvider {
     @Autowired
     private SingleResponseEndpointRepository singleResponseEndpointRepository;
 
-    private LoadingCache<Integer, SingleResponseEndpoint> cachedHttpEndpoints = CacheBuilder.newBuilder()
+    private LoadingCache<Integer, SingleResponseEndpoint> cachedEndpoints = CacheBuilder.newBuilder()
             .build(new CacheLoader<>() {
                 @Override
-                public SingleResponseEndpoint load(@NotNull Integer httpEndpointId) {
+                public SingleResponseEndpoint load(@NotNull Integer singleResponseEndpointId) {
                     return null;
                 }
             });
@@ -39,46 +39,46 @@ public class SingleResponseEndpointProvider {
     public int reloadAll() {
         log.info("Reloading cached values");
         List<SingleResponseEndpoint> singleResponseEndpoints = singleResponseEndpointRepository.getAll();
-        cachedHttpEndpoints.invalidateAll();
-        singleResponseEndpoints.forEach(e -> cachedHttpEndpoints.put(e.getId(), e));
+        cachedEndpoints.invalidateAll();
+        singleResponseEndpoints.forEach(e -> cachedEndpoints.put(e.getId(), e));
         return singleResponseEndpoints.size();
     }
 
-    public SingleResponseEndpoint reloadId(Integer httpEndpointId) {
-        log.info(String.format("Reloading cached http endpoint value with id %s", httpEndpointId));
-        SingleResponseEndpoint singleResponseEndpoint = singleResponseEndpointRepository.getById(httpEndpointId);
-        cachedHttpEndpoints.invalidate(httpEndpointId);
-        cachedHttpEndpoints.put(httpEndpointId, singleResponseEndpoint);
+    public SingleResponseEndpoint reloadId(Integer singleResponseEndpointId) {
+        log.info(String.format("Reloading cached http endpoint value with id %s", singleResponseEndpointId));
+        SingleResponseEndpoint singleResponseEndpoint = singleResponseEndpointRepository.getById(singleResponseEndpointId);
+        cachedEndpoints.invalidate(singleResponseEndpointId);
+        cachedEndpoints.put(singleResponseEndpointId, singleResponseEndpoint);
         return singleResponseEndpoint;
     }
 
-    public SingleResponseEndpoint getById(Integer httpEndpointId) throws HttpEndpointNotFoundException {
+    public SingleResponseEndpoint getById(Integer singleResponseEndpointId) throws HttpEndpointNotFoundException {
         try {
-            return cachedHttpEndpoints.get(httpEndpointId);
+            return cachedEndpoints.get(singleResponseEndpointId);
         } catch (CacheLoader.InvalidCacheLoadException | ExecutionException e) {
             log.warn(e.getMessage());
-            throw new HttpEndpointNotFoundException(httpEndpointId, e);
+            throw new HttpEndpointNotFoundException(singleResponseEndpointId, e);
         }
     }
 
     public int put(SingleResponseEndpoint singleResponseEndpoint) throws DatabaseException {
-        Integer httpEndpointId = singleResponseEndpointRepository.save(singleResponseEndpoint);
-        singleResponseEndpoint.setId(httpEndpointId);
-        cachedHttpEndpoints.put(httpEndpointId, singleResponseEndpoint);
-        return httpEndpointId;
+        Integer singleResponseEndpointId = singleResponseEndpointRepository.save(singleResponseEndpoint);
+        singleResponseEndpoint.setId(singleResponseEndpointId);
+        cachedEndpoints.put(singleResponseEndpointId, singleResponseEndpoint);
+        return singleResponseEndpointId;
     }
 
-    public void remove(Integer httpEndpointId) throws DatabaseException {
-        singleResponseEndpointRepository.remove(httpEndpointId);
-        cachedHttpEndpoints.invalidate(httpEndpointId);
+    public void remove(Integer singleResponseEndpointId) throws DatabaseException {
+        singleResponseEndpointRepository.remove(singleResponseEndpointId);
+        cachedEndpoints.invalidate(singleResponseEndpointId);
     }
 
     public void clear() {
-        cachedHttpEndpoints.invalidateAll();
+        cachedEndpoints.invalidateAll();
     }
 
     public long size() {
-        return cachedHttpEndpoints.size();
+        return cachedEndpoints.size();
     }
 
     @Scheduled(fixedDelay = 60000) //every minute
@@ -87,6 +87,6 @@ public class SingleResponseEndpointProvider {
     }
 
     private Collection<SingleResponseEndpoint> getAll() {
-        return cachedHttpEndpoints.asMap().values();
+        return cachedEndpoints.asMap().values();
     }
 }

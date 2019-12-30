@@ -30,7 +30,7 @@ public class SingleResponseEndpointServiceIT {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private SingleResponseEndpointService httpEndpointService;
+    private SingleResponseEndpointService singleResponseEndpointService;
 
     @Autowired
     private SingleResponseEndpointProvider singleResponseEndpointProvider;
@@ -48,50 +48,50 @@ public class SingleResponseEndpointServiceIT {
     }
 
     @Test
-    public void createHttpEndpointSavesHeadersInAnotherTable() {
+    public void createSingleResponseEndpointSavesHeadersInAnotherTable() {
         Integer numberOfHeadersBefore = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM voip.EndpointHeader", Integer.class);
-        httpEndpointService.createHttpEndpoint(new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{\"body\": \"bla\"}"));
+        singleResponseEndpointService.createSingleResponseEndpoint(new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{\"body\": \"bla\"}"));
         Integer numberOfHeadersAfter = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM voip.EndpointHeader", Integer.class);
         assertThat(numberOfHeadersBefore).isEqualTo(numberOfHeadersAfter - 3);
     }
 
     @Test
     public void nullHttpMethodReturnsCorrectResponse() {
-        GenApiResponse<SingleResponseEndpoint> httpEndpointGenApiResponse = httpEndpointService.createHttpEndpoint(new SingleResponseEndpoint(null, null, givenHttpHeaders(), "{\"valid\"}: \"body\""));
-        assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
-        assertThat(httpEndpointGenApiResponse.getMessage().toLowerCase()).contains("method");
+        GenApiResponse<SingleResponseEndpoint> singleResponseEndpointGenApiResponse = singleResponseEndpointService.createSingleResponseEndpoint(new SingleResponseEndpoint(null, null, givenHttpHeaders(), "{\"valid\"}: \"body\""));
+        assertThat(singleResponseEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
+        assertThat(singleResponseEndpointGenApiResponse.getMessage().toLowerCase()).contains("method");
     }
 
     @Test
     public void invalidHeadersReturnsCorrectResponse() {
         List<HttpHeader> headers = givenHttpHeaders();
         headers.get(0).setName("");
-        GenApiResponse<SingleResponseEndpoint> httpEndpointGenApiResponse = httpEndpointService.createHttpEndpoint(new SingleResponseEndpoint(null, HttpMethod.GET, headers, "{\"valid\": \"body\"}"));
-        assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
-        assertThat(httpEndpointGenApiResponse.getMessage().toLowerCase()).contains("name");
+        GenApiResponse<SingleResponseEndpoint> singleResponseEndpointGenApiResponse = singleResponseEndpointService.createSingleResponseEndpoint(new SingleResponseEndpoint(null, HttpMethod.GET, headers, "{\"valid\": \"body\"}"));
+        assertThat(singleResponseEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
+        assertThat(singleResponseEndpointGenApiResponse.getMessage().toLowerCase()).contains("name");
     }
 
     @Test
     public void invalidBodyReturnsCorrectResponse() {
-        GenApiResponse<SingleResponseEndpoint> httpEndpointGenApiResponse = httpEndpointService.createHttpEndpoint(new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "invalid Body Example"));
-        assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
-        assertThat(httpEndpointGenApiResponse.getMessage().toLowerCase()).contains("body");
+        GenApiResponse<SingleResponseEndpoint> singleResponseEndpointGenApiResponse = singleResponseEndpointService.createSingleResponseEndpoint(new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "invalid Body Example"));
+        assertThat(singleResponseEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
+        assertThat(singleResponseEndpointGenApiResponse.getMessage().toLowerCase()).contains("body");
     }
 
     @Test
     public void getByIdReturns200IfFound() throws DatabaseException {
-        Integer httpEndpointId = singleResponseEndpointProvider.put(new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{\"body\": \"bla\"}"));
+        Integer singleResponseEndpointId = singleResponseEndpointProvider.put(new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{\"body\": \"bla\"}"));
 
-        GenApiResponse<SingleResponseEndpoint> httpEndpointGenApiResponse = httpEndpointService.getById(httpEndpointId);
+        GenApiResponse<SingleResponseEndpoint> singleResponseEndpointGenApiResponse = singleResponseEndpointService.getById(singleResponseEndpointId);
 
-        assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(200);
+        assertThat(singleResponseEndpointGenApiResponse.getStatusCode()).isEqualTo(200);
     }
 
     @Test
     public void getByIdReturns404IfNotFound() {
-        GenApiResponse<SingleResponseEndpoint> httpEndpointGenApiResponse = httpEndpointService.getById(0);
+        GenApiResponse<SingleResponseEndpoint> singleResponseEndpointGenApiResponse = singleResponseEndpointService.getById(0);
 
-        assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(404);
+        assertThat(singleResponseEndpointGenApiResponse.getStatusCode()).isEqualTo(404);
     }
 
     private List<HttpHeader> givenHttpHeaders() {

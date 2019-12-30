@@ -57,9 +57,9 @@ public class SingleResponseEndpointRepositoryIT {
 
     @Test
     public void getByIdTest() throws DatabaseException {
-        Integer httpEndpointId = singleResponseEndpointRepository.save(new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{body}"));
+        Integer singleResponseEndpointId = singleResponseEndpointRepository.save(new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{body}"));
 
-        SingleResponseEndpoint singleResponseEndpoint = singleResponseEndpointRepository.getById(httpEndpointId);
+        SingleResponseEndpoint singleResponseEndpoint = singleResponseEndpointRepository.getById(singleResponseEndpointId);
 
         assertThat(singleResponseEndpoint).isNotNull();
         assertThat(singleResponseEndpoint.getHttpHeaders().size()).isEqualTo(3);
@@ -68,9 +68,9 @@ public class SingleResponseEndpointRepositoryIT {
     @Test
     public void updateByIdTest() throws DatabaseException {
         SingleResponseEndpoint singleResponseEndpoint = new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{body}");
-        Integer httpEndpointId = singleResponseEndpointRepository.save(singleResponseEndpoint);
+        Integer singleResponseEndpointId = singleResponseEndpointRepository.save(singleResponseEndpoint);
 
-        singleResponseEndpoint.setId(httpEndpointId);
+        singleResponseEndpoint.setId(singleResponseEndpointId);
         singleResponseEndpoint.setResponse("{newBody}");
 
         List<HttpHeader> httpHeaders = new ArrayList<>();
@@ -79,7 +79,7 @@ public class SingleResponseEndpointRepositoryIT {
 
         singleResponseEndpointRepository.update(singleResponseEndpoint);
 
-        singleResponseEndpoint = singleResponseEndpointRepository.getById(httpEndpointId);
+        singleResponseEndpoint = singleResponseEndpointRepository.getById(singleResponseEndpointId);
 
         assertThat(singleResponseEndpoint.getResponse()).isEqualTo("{newBody}");
         assertThat(singleResponseEndpoint.getHttpHeaders().get(0).getName()).isEqualTo("Novi");
@@ -99,12 +99,12 @@ public class SingleResponseEndpointRepositoryIT {
     @Test
     public void getByIdWithNoHeadersTest() throws DatabaseException {
         singleResponseEndpointRepository.save(new SingleResponseEndpoint(null, HttpMethod.GET, Collections.emptyList(), "{}"));
-        Integer httpEndpointId = singleResponseEndpointRepository.save(new SingleResponseEndpoint(null, HttpMethod.POST, Collections.emptyList(), "{\"name\":\"value\"}"));
+        Integer singleResponseEndpointId = singleResponseEndpointRepository.save(new SingleResponseEndpoint(null, HttpMethod.POST, Collections.emptyList(), "{\"name\":\"value\"}"));
 
-        SingleResponseEndpoint singleResponseEndpoint = singleResponseEndpointRepository.getById(httpEndpointId);
+        SingleResponseEndpoint singleResponseEndpoint = singleResponseEndpointRepository.getById(singleResponseEndpointId);
 
         assertThat(singleResponseEndpoint).isNotNull();
-        assertThat(singleResponseEndpoint.getId()).isEqualTo(httpEndpointId);
+        assertThat(singleResponseEndpoint.getId()).isEqualTo(singleResponseEndpointId);
         assertThat(singleResponseEndpoint.getHttpHeaders().size()).isEqualTo(0);
     }
 

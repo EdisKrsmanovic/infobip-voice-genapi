@@ -10,15 +10,15 @@ import java.io.Serializable;
 public final class GenApiResponse<T> implements Serializable {
 
     private final Integer statusCode;
-    private final T httpEndpoint;
+    private final T entity;
     private final String message;
 
     public Integer getStatusCode() {
         return statusCode;
     }
 
-    public T getHttpEndpoint() {
-        return httpEndpoint;
+    public T getEntity() {
+        return entity;
     }
 
     public String getMessage() {

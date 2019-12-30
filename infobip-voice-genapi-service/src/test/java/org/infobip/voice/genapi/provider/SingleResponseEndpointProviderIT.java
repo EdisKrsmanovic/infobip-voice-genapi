@@ -94,18 +94,18 @@ public class SingleResponseEndpointProviderIT {
     @Test
     public void cacheReturnsCachedValue() throws DatabaseException, HttpEndpointNotFoundException {
         SingleResponseEndpoint singleResponseEndpoint = new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{}");
-        Integer httpEndpointId = singleResponseEndpointRepository.save(singleResponseEndpoint);
+        Integer singlResponseEndpointId = singleResponseEndpointRepository.save(singleResponseEndpoint);
 
         singleResponseEndpointProvider.reloadAll(); //caching
         //Using jdbctemplate to update a value so cache doesn't clear, and returns cached value
-        jdbcTemplate.update("UPDATE voip.SingleResponseEndpoint SET HttpMethod = 'DELETE' WHERE Id=?", httpEndpointId);
+        jdbcTemplate.update("UPDATE voip.SingleResponseEndpoint SET HttpMethod = 'DELETE' WHERE Id=?", singlResponseEndpointId);
 
-        SingleResponseEndpoint singleResponseEndpoint1 = singleResponseEndpointProvider.getById(httpEndpointId);
+        SingleResponseEndpoint singleResponseEndpoint1 = singleResponseEndpointProvider.getById(singlResponseEndpointId);
         assertThat(singleResponseEndpoint1.getHttpMethod()).isEqualTo(HttpMethod.GET);
 
         singleResponseEndpointProvider.reloadAll(); //update cache
 
-        singleResponseEndpoint1 = singleResponseEndpointProvider.getById(httpEndpointId);
+        singleResponseEndpoint1 = singleResponseEndpointProvider.getById(singlResponseEndpointId);
         assertThat(singleResponseEndpoint1.getHttpMethod()).isEqualTo(HttpMethod.DELETE);
     }
 

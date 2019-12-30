@@ -23,27 +23,27 @@ public class SingleResponseEndpointService {
 
     private SingleResponseEndpointValidator singleResponseEndpointValidator;
 
-    public GenApiResponse<SingleResponseEndpoint> createHttpEndpoint(SingleResponseEndpoint singleResponseEndpoint) {
+    public GenApiResponse<SingleResponseEndpoint> createSingleResponseEndpoint(SingleResponseEndpoint singleResponseEndpoint) {
         int statusCode = 200;
         String message = "OK";
         try {
             singleResponseEndpointValidator.checkIfValid(singleResponseEndpoint);
             singleResponseEndpointProvider.put(singleResponseEndpoint);
         } catch (DatabaseException exception) {
-            log.warn(String.format("Failed to save HttpEndpoint, message: %s", exception.getMessage()));
+            log.warn(String.format("Failed to save Single Response Endpoint, message: %s", exception.getMessage()));
             statusCode = 503;
             message = exception.getMessage();
         } catch (ConstraintViolationException exception) {
-            log.warn(String.format("HttpEndpoint is not valid, message: %s", exception.getMessage()));
+            log.warn(String.format("Single Response Endpoint is not valid, message: %s", exception.getMessage()));
             statusCode = 400;
             message = exception.getMessage();
         }
         return generateGenApiResponse(statusCode, message, singleResponseEndpoint);
     }
 
-    public GenApiResponse<SingleResponseEndpoint> getById(Integer httpEndpointId) {
+    public GenApiResponse<SingleResponseEndpoint> getById(Integer singlResponseEndpointId) {
         try {
-            SingleResponseEndpoint singleResponseEndpoint = singleResponseEndpointProvider.getById(httpEndpointId);
+            SingleResponseEndpoint singleResponseEndpoint = singleResponseEndpointProvider.getById(singlResponseEndpointId);
             return generateGenApiResponse(200, "OK", singleResponseEndpoint);
         } catch (HttpEndpointNotFoundException e) {
             return generateGenApiResponse(404, "Not found", null);
@@ -54,7 +54,7 @@ public class SingleResponseEndpointService {
         return GenApiResponse.<SingleResponseEndpoint>builder()
                 .statusCode(statusCode)
                 .message(message)
-                .httpEndpoint(singleResponseEndpoint)
+                .entity(singleResponseEndpoint)
                 .build();
     }
 }
