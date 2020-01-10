@@ -21,6 +21,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -115,21 +116,29 @@ public class ScenarioEndpointServiceIT {
         assertThat(scenarioEndpoint.getEndpointResponses().size()).isEqualTo(1);
     }
 
+    @Test(expected = ConstraintViolationException.class)
+    public void createScenarioEndpointResponseThrowsInvalidBody() {
+        ScenarioEndpoint httpEndpoint = new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>());
+        scenarioEndpointService.createEndpoint(httpEndpoint);
+
+        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{response1}"));
+    }
+
     @Test
     public void serviceReturnsResponsesCyclically() {
         ScenarioEndpoint httpEndpoint = new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>());
         scenarioEndpointService.createEndpoint(httpEndpoint);
 
-        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{response1}"));
-        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{response2}"));
-        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{response3}"));
+        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 1}"));
+        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 2}"));
+        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 3}"));
 
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{response1}");
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{response2}");
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{response3}");
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{response1}");
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{response2}");
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{response3}");
+        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 1}");
+        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 2}");
+        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 3}");
+        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 1}");
+        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 2}");
+        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 3}");
     }
 
     @Test

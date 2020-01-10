@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -69,7 +70,7 @@ public class ScenarioEndpointService implements EndpointService<ScenarioEndpoint
         return generateGenApiResponse(statusCode, message, scenarioEndpoint);
     }
 
-    public GenApiResponse<EndpointResponse> createScenarioEndpointResponse(Integer scenarioEndpointId, EndpointResponse endpointResponse) {
+    public GenApiResponse<EndpointResponse> createScenarioEndpointResponse(Integer scenarioEndpointId, @Valid EndpointResponse endpointResponse) {
         int statusCode = 200;
         String message = "OK";
         try {
