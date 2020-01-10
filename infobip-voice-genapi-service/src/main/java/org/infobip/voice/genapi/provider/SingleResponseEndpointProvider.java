@@ -11,7 +11,6 @@ import org.infobip.voice.genapi.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.repository.SingleResponseEndpointRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +21,7 @@ import java.util.concurrent.ExecutionException;
 @Data
 @Slf4j
 @Component
-@EnableScheduling
-public class SingleResponseEndpointProvider {
+public class SingleResponseEndpointProvider implements EndpointProvider<SingleResponseEndpoint> {
 
     @Autowired
     private SingleResponseEndpointRepository singleResponseEndpointRepository;
@@ -36,8 +34,8 @@ public class SingleResponseEndpointProvider {
                 }
             });
 
-    public int reloadAll() {
-        log.info("Reloading cached values");
+    public long reloadAll() {
+        log.info("Reloading cached Single Response Endpoint values");
         List<SingleResponseEndpoint> singleResponseEndpoints = singleResponseEndpointRepository.getAll();
         cachedEndpoints.invalidateAll();
         singleResponseEndpoints.forEach(e -> cachedEndpoints.put(e.getId(), e));
@@ -75,6 +73,10 @@ public class SingleResponseEndpointProvider {
 
     public void clear() {
         cachedEndpoints.invalidateAll();
+    }
+
+    public void update(SingleResponseEndpoint singleResponseEndpoint) throws DatabaseException {
+        singleResponseEndpointRepository.update(singleResponseEndpoint);
     }
 
     public long size() {

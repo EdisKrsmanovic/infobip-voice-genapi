@@ -6,6 +6,7 @@ import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.model.HttpHeader;
 import org.infobip.voice.genapi.repository.mapper.SingleResponseEndpointRowMapper;
+import org.infobip.voice.genapi.validator.EndpointValidator;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,6 +23,8 @@ import java.util.*;
 public class SingleResponseEndpointRepository {
 
     private JdbcTemplate jdbcTemplate;
+
+    private EndpointValidator endpointValidator;
 
     @Transactional(rollbackFor = DatabaseException.class)
     public Integer save(SingleResponseEndpoint singleResponseEndpoint) throws DatabaseException {
@@ -43,7 +46,7 @@ public class SingleResponseEndpointRepository {
 
     public SingleResponseEndpoint getById(Integer id) {
         try {
-            return jdbcTemplate.queryForObject(String.format("select * from voip.SingleResponseEndpoint sre left join voip.EndpointHeader eh on eh.EndpointId=sre.Id where sre.id=%d", id), new SingleResponseEndpointRowMapper());
+            return jdbcTemplate.queryForObject(String.format("select * from voip.SingleResponseEndpoint sre left join voip.EndpointHeader eh on eh.EndpointId=sre.Id AND EndpointType = 'SingleResponse' where sre.id=%d", id), new SingleResponseEndpointRowMapper());
         } catch (EmptyResultDataAccessException e) {
             log.warn("No results found");
         } catch (Exception e) {
@@ -54,24 +57,23 @@ public class SingleResponseEndpointRepository {
 
     public List<SingleResponseEndpoint> getAll() {
         try {
-            SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from voip.SingleResponseEndpoint sre left join voip.EndpointHeader eh on eh.EndpointId=sre.Id");
+            SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from voip.SingleResponseEndpoint sre left join voip.EndpointHeader eh on eh.EndpointId=sre.Id AND EndpointType = 'SingleResponse'");
             Map<Integer, SingleResponseEndpoint> singleResponseEndpointMap = new HashMap<>();
 
             while (sqlRowSet.next()) {
-                int singlResponseEndpointId = sqlRowSet.getInt("Id");
+                int singleResponseEndpointId = sqlRowSet.getInt("Id");
                 String httpHeaderName = sqlRowSet.getString("Name");
                 String httpHeaderValue = sqlRowSet.getString("Value");
 
-                SingleResponseEndpoint singleResponseEndpoint = singleResponseEndpointMap.get(singlResponseEndpointId);
+                SingleResponseEndpoint singleResponseEndpoint = singleResponseEndpointMap.get(singleResponseEndpointId);
 
                 if (singleResponseEndpoint == null) {
-                    List<HttpHeader> httpHeaders = new ArrayList<>();
                     singleResponseEndpoint = new SingleResponseEndpoint(
-                            singlResponseEndpointId,
+                            singleResponseEndpointId,
                             HttpMethod.valueOf(sqlRowSet.getString("HttpMethod")),
-                            httpHeaders,
+                            new ArrayList<>(),
                             sqlRowSet.getString("Response"));
-                    singleResponseEndpointMap.put(singlResponseEndpointId, singleResponseEndpoint);
+                    singleResponseEndpointMap.put(singleResponseEndpointId, singleResponseEndpoint);
                 }
 
                 singleResponseEndpoint.getHttpHeaders().add(new HttpHeader(httpHeaderName, httpHeaderValue));
@@ -88,33 +90,30 @@ public class SingleResponseEndpointRepository {
 
     @Transactional(rollbackFor = DatabaseException.class)
     public void update(SingleResponseEndpoint singleResponseEndpoint) throws DatabaseException {
-        Integer singlResponseEndpointId = singleResponseEndpoint.getId();
-        if (singlResponseEndpointId == null) {
-            log.warn("Cannot update Single Response Endpoint with null id");
-        } else {
+        Integer singleResponseEndpointId = singleResponseEndpoint.getId();
+        endpointValidator.validate(singleResponseEndpoint, SingleResponseEndpoint.UpdateValidation.class);
             try {
                 jdbcTemplate.update("UPDATE voip.SingleResponseEndpoint SET HttpMethod = ?, Response = ?",
-                        singleResponseEndpoint.getHttpMethod().toString(), singleResponseEndpoint.getResponse());
-                jdbcTemplate.update("DELETE FROM voip.EndpointHeader WHERE EndpointId = ?", singlResponseEndpointId);
-                singleResponseEndpoint.getHttpHeaders().forEach(e -> insertHeaderToDb(singlResponseEndpointId, e));
+                        singleResponseEndpoint.getHttpMethod().toString(), singleResponseEndpoint.getResponse().getBody());
+                jdbcTemplate.update("DELETE FROM voip.EndpointHeader WHERE EndpointId = ? AND EndpointType = 'SingleResponse'", singleResponseEndpointId);
+                singleResponseEndpoint.getHttpHeaders().forEach(e -> insertHeaderToDb(singleResponseEndpointId, e));
             } catch (Exception e) {
-                log.error(String.format("Error while trying to save Single Response Endpoint with id %s to database, rolling back. Message: %s", singlResponseEndpointId, e.getMessage()));
+                log.error(String.format("Error while trying to save Single Response Endpoint with id %s to database, rolling back. Message: %s", singleResponseEndpointId, e.getMessage()));
                 throw new DatabaseException(e.getMessage());
             }
-        }
     }
 
-    private void insertHeaderToDb(Number singlResponseEndpointId, HttpHeader header) {
-        jdbcTemplate.update("insert into voip.EndpointHeader(EndpointId, Name, Value) VALUES(?,?,?)", singlResponseEndpointId, header.getName(), header.getValue());
+    private void insertHeaderToDb(Number singleResponseEndpointId, HttpHeader header) {
+        jdbcTemplate.update("insert into voip.EndpointHeader(EndpointId, Name, Value, EndpointType) VALUES(?,?,?,'SingleResponse')", singleResponseEndpointId, header.getName(), header.getValue());
     }
 
     @Transactional(rollbackFor = DatabaseException.class)
-    public void remove(Integer singlResponseEndpointId) throws DatabaseException {
+    public void remove(Integer singleResponseEndpointId) throws DatabaseException {
         try {
-            jdbcTemplate.update("DELETE FROM voip.EndpointHeader WHERE EndpointId = ?", singlResponseEndpointId);
-            jdbcTemplate.update("DELETE FROM voip.SingleResponseEndpoint WHERE Id = ?", singlResponseEndpointId);
+            jdbcTemplate.update("DELETE FROM voip.EndpointHeader WHERE EndpointId = ? AND EndpointType = 'SingleResponse'", singleResponseEndpointId);
+            jdbcTemplate.update("DELETE FROM voip.SingleResponseEndpoint WHERE Id = ?", singleResponseEndpointId);
         } catch (Exception e) {
-            log.error(String.format("Error while trying to remove Single Response Endpoint with id %s, message: %s", singlResponseEndpointId, e.getMessage()));
+            log.error(String.format("Error while trying to remove Single Response Endpoint with id %s, message: %s", singleResponseEndpointId, e.getMessage()));
             throw new DatabaseException(e.getMessage());
         }
     }

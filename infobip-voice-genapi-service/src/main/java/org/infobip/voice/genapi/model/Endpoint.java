@@ -8,5 +8,6 @@ public interface Endpoint {
     Integer getId();
     HttpMethod getHttpMethod();
     List<HttpHeader> getHttpHeaders();
-    String getResponse();
+    EndpointResponse getResponse();
+    void setId(Integer id);
 }

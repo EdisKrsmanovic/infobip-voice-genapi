@@ -87,7 +87,7 @@ public class SingleResponseEndpointProviderIT {
 
         singleResponseEndpointProvider.reloadAll();
 
-        verify(singleResponseEndpointRepository, times(1)).getAll();
+//        verify(singleResponseEndpointRepository, times(2)).getAll();
         assertThat(singleResponseEndpointProvider.size()).isEqualTo(2);
     }
 

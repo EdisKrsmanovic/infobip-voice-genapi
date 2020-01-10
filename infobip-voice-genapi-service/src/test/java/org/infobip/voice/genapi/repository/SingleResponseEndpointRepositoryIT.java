@@ -3,6 +3,7 @@ package org.infobip.voice.genapi.repository;
 import org.infobip.voice.genapi.Application;
 import org.infobip.voice.genapi.TestConfiguration;
 import org.infobip.voice.genapi.exception.DatabaseException;
+import org.infobip.voice.genapi.model.EndpointResponse;
 import org.infobip.voice.genapi.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.model.HttpHeader;
 import org.junit.After;
@@ -16,6 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -71,7 +73,7 @@ public class SingleResponseEndpointRepositoryIT {
         Integer singleResponseEndpointId = singleResponseEndpointRepository.save(singleResponseEndpoint);
 
         singleResponseEndpoint.setId(singleResponseEndpointId);
-        singleResponseEndpoint.setResponse("{newBody}");
+        singleResponseEndpoint.setResponse(new EndpointResponse("{newBody}"));
 
         List<HttpHeader> httpHeaders = new ArrayList<>();
         httpHeaders.add(new HttpHeader("Novi", "Header"));
@@ -81,9 +83,15 @@ public class SingleResponseEndpointRepositoryIT {
 
         singleResponseEndpoint = singleResponseEndpointRepository.getById(singleResponseEndpointId);
 
-        assertThat(singleResponseEndpoint.getResponse()).isEqualTo("{newBody}");
+        assertThat(singleResponseEndpoint.getResponse().getBody()).isEqualTo("{newBody}");
         assertThat(singleResponseEndpoint.getHttpHeaders().get(0).getName()).isEqualTo("Novi");
         assertThat(singleResponseEndpoint.getHttpHeaders().size()).isEqualTo(1);
+    }
+
+    @Test(expected = ConstraintViolationException.class)
+    public void updateWithNullId() throws DatabaseException {
+        SingleResponseEndpoint singleResponseEndpoint = new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{body}");
+        singleResponseEndpointRepository.update(singleResponseEndpoint);
     }
 
     @Test
