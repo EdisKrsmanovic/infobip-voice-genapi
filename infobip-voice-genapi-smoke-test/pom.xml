@@ -3,7 +3,7 @@
     <parent>
         <artifactId>infobip-voice-genapi</artifactId>
         <groupId>org.infobip.voice</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.infobip.voice</groupId>
             <artifactId>infobip-voice-genapi-connector</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.infobip.common.smoketest</groupId>
