@@ -17,7 +17,7 @@
 
   <artifactId>infobip-voice-genapi</artifactId>
 
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.2</version>
 
   <properties>
 
@@ -56,6 +56,6 @@
   </modules>
   <scm>
     <developerConnection>scm:git:ssh://git@git.ib-ci.com:7999/sky/infobip-voice-genapi.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>infobip-voice-genapi-1.0.2</tag>
   </scm>
 </project>
