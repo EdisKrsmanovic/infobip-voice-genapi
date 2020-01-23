@@ -37,21 +37,21 @@ public class SingleResponseEndpointServiceIT {
 
     @Before
     public void beforeEveryTest() {
-        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
-        jdbcTemplate.update("DELETE FROM voip.SingleResponseEndpoint");
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM SingleResponseEndpoint");
     }
 
     @After
     public void afterEveryTest() {
-        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
-        jdbcTemplate.update("DELETE FROM voip.SingleResponseEndpoint");
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM SingleResponseEndpoint");
     }
 
     @Test
     public void createSingleResponseEndpointSavesHeadersInAnotherTable() {
-        Integer numberOfHeadersBefore = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM voip.EndpointHeader", Integer.class);
+        Integer numberOfHeadersBefore = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM EndpointHeader", Integer.class);
         singleResponseEndpointService.createEndpoint(new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{\"body\": \"bla\"}"));
-        Integer numberOfHeadersAfter = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM voip.EndpointHeader", Integer.class);
+        Integer numberOfHeadersAfter = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM EndpointHeader", Integer.class);
         assertThat(numberOfHeadersBefore).isEqualTo(numberOfHeadersAfter - 3);
     }
 

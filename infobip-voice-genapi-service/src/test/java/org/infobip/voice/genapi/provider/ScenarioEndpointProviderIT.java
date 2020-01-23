@@ -44,16 +44,16 @@ public class ScenarioEndpointProviderIT {
     @Before
     public void beforeEveryTest() {
         Mockito.clearInvocations(scenarioEndpointRepository);
-        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
-        jdbcTemplate.update("DELETE FROM voip.EndpointResponse");
-        jdbcTemplate.update("DELETE FROM voip.ScenarioEndpoint");
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM EndpointResponse");
+        jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
     }
 
     @After
     public void afterEveryTest() {
-        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
-        jdbcTemplate.update("DELETE FROM voip.EndpointResponse");
-        jdbcTemplate.update("DELETE FROM voip.ScenarioEndpoint");
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM EndpointResponse");
+        jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
         scenarioEndpointProvider.clear();
     }
 
@@ -101,7 +101,7 @@ public class ScenarioEndpointProviderIT {
 
         scenarioEndpointProvider.reloadAll(); //caching
         //Using jdbctemplate to update a value so cache doesn't clear, and returns cached value
-        jdbcTemplate.update("UPDATE voip.ScenarioEndpoint SET HttpMethod = 'DELETE' WHERE Id=?", scenarioEndpointId);
+        jdbcTemplate.update("UPDATE ScenarioEndpoint SET HttpMethod = 'DELETE' WHERE Id=?", scenarioEndpointId);
 
         ScenarioEndpoint scenarioEndpoint1 = scenarioEndpointProvider.getById(scenarioEndpointId);
         assertThat(scenarioEndpoint1.getHttpMethod()).isEqualTo(HttpMethod.GET);

@@ -46,23 +46,23 @@ public class ScenarioEndpointServiceIT {
 
     @Before
     public void beforeEveryTest() {
-        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
-        jdbcTemplate.update("DELETE FROM voip.EndpointResponse");
-        jdbcTemplate.update("DELETE FROM voip.ScenarioEndpoint");
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM EndpointResponse");
+        jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
     }
 
     @After
     public void afterEveryTest() {
-        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
-        jdbcTemplate.update("DELETE FROM voip.EndpointResponse");
-        jdbcTemplate.update("DELETE FROM voip.ScenarioEndpoint");
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM EndpointResponse");
+        jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
     }
 
     @Test
     public void createHttpEndpointSavesHeadersInAnotherTable() {
-        Integer numberOfHeadersBefore = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM voip.EndpointHeader", Integer.class);
+        Integer numberOfHeadersBefore = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM EndpointHeader", Integer.class);
         scenarioEndpointService.createEndpoint(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>()));
-        Integer numberOfHeadersAfter = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM voip.EndpointHeader", Integer.class);
+        Integer numberOfHeadersAfter = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM EndpointHeader", Integer.class);
         assertThat(numberOfHeadersBefore).isEqualTo(numberOfHeadersAfter - 3);
     }
 
@@ -111,7 +111,7 @@ public class ScenarioEndpointServiceIT {
         ScenarioEndpoint scenarioEndpoint = new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>());
         scenarioEndpointService.createEndpoint(scenarioEndpoint);
 
-        scenarioEndpointService.createScenarioEndpointResponse(scenarioEndpoint.getId(), new EndpointResponse("{response}"));
+        scenarioEndpointService.createScenarioEndpointResponse(scenarioEndpoint.getId(), new EndpointResponse("{\"response\": \"asd\"}"));
 
         assertThat(scenarioEndpoint.getEndpointResponses().size()).isEqualTo(1);
     }

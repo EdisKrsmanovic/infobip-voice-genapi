@@ -43,14 +43,14 @@ public class SingleResponseEndpointProviderIT {
     @Before
     public void beforeEveryTest() {
         Mockito.clearInvocations(singleResponseEndpointRepository);
-        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
-        jdbcTemplate.update("DELETE FROM voip.SingleResponseEndpoint");
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM SingleResponseEndpoint");
     }
 
     @After
     public void afterEveryTest() {
-        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
-        jdbcTemplate.update("DELETE FROM voip.SingleResponseEndpoint");
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM SingleResponseEndpoint");
         singleResponseEndpointProvider.clear();
     }
 
@@ -98,7 +98,7 @@ public class SingleResponseEndpointProviderIT {
 
         singleResponseEndpointProvider.reloadAll(); //caching
         //Using jdbctemplate to update a value so cache doesn't clear, and returns cached value
-        jdbcTemplate.update("UPDATE voip.SingleResponseEndpoint SET HttpMethod = 'DELETE' WHERE Id=?", singlResponseEndpointId);
+        jdbcTemplate.update("UPDATE SingleResponseEndpoint SET HttpMethod = 'DELETE' WHERE Id=?", singlResponseEndpointId);
 
         SingleResponseEndpoint singleResponseEndpoint1 = singleResponseEndpointProvider.getById(singlResponseEndpointId);
         assertThat(singleResponseEndpoint1.getHttpMethod()).isEqualTo(HttpMethod.GET);

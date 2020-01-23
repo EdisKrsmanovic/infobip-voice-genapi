@@ -12,6 +12,6 @@ infobip.remoting:
 spring:
    datasource:
      driverClassName: net.sourceforge.jtds.jdbc.Driver
-     url: jdbc:jtds:sqlserver://sql-sa-test.infobip.local:1433/infobip_voice_calls_config_db_ekrsmanovic_integration
+     url: jdbc:jtds:sqlserver://sql-sa-test.infobip.local:1433/infobip_voice_genapi_integration
      username: voip
      password: voip

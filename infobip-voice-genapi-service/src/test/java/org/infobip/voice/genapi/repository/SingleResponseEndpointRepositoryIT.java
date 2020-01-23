@@ -37,14 +37,14 @@ public class SingleResponseEndpointRepositoryIT {
 
     @Before
     public void beforeEveryTest() {
-        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
-        jdbcTemplate.update("DELETE FROM voip.SingleResponseEndpoint");
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM SingleResponseEndpoint");
     }
 
     @After
     public void afterEveryTest() {
-        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
-        jdbcTemplate.update("DELETE FROM voip.SingleResponseEndpoint");
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM SingleResponseEndpoint");
     }
 
     @Test

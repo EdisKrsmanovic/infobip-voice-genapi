@@ -37,16 +37,16 @@ public class ScenarioEndpointRepositoryIT {
 
     @Before
     public void beforeEveryTest() {
-        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
-        jdbcTemplate.update("DELETE FROM voip.EndpointResponse");
-        jdbcTemplate.update("DELETE FROM voip.ScenarioEndpoint");
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM EndpointResponse");
+        jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
     }
 
     @After
     public void afterEveryTest() {
-        jdbcTemplate.update("DELETE FROM voip.EndpointHeader");
-        jdbcTemplate.update("DELETE FROM voip.EndpointResponse");
-        jdbcTemplate.update("DELETE FROM voip.ScenarioEndpoint");
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM EndpointResponse");
+        jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
     }
 
     @Test
