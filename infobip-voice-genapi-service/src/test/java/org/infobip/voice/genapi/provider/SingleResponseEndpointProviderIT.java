@@ -2,10 +2,10 @@ package org.infobip.voice.genapi.provider;
 
 import org.infobip.voice.genapi.Application;
 import org.infobip.voice.genapi.TestConfiguration;
+import org.infobip.voice.genapi.connector.model.HttpHeader;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
 import org.infobip.voice.genapi.model.SingleResponseEndpoint;
-import org.infobip.voice.genapi.model.HttpHeader;
 import org.infobip.voice.genapi.repository.SingleResponseEndpointRepository;
 import org.junit.After;
 import org.junit.Before;

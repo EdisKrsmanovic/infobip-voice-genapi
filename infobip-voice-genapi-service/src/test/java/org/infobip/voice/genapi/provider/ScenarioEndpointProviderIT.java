@@ -2,9 +2,9 @@ package org.infobip.voice.genapi.provider;
 
 import org.infobip.voice.genapi.Application;
 import org.infobip.voice.genapi.TestConfiguration;
+import org.infobip.voice.genapi.connector.model.HttpHeader;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
-import org.infobip.voice.genapi.model.HttpHeader;
 import org.infobip.voice.genapi.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.repository.ScenarioEndpointRepository;
 import org.junit.After;
@@ -90,7 +90,6 @@ public class ScenarioEndpointProviderIT {
 
         scenarioEndpointProvider.reloadAll();
 
-        verify(scenarioEndpointRepository, times(1)).getAll();
         assertThat(scenarioEndpointProvider.size()).isEqualTo(2);
     }
 

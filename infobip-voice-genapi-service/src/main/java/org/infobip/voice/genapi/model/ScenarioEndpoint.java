@@ -3,11 +3,13 @@ package org.infobip.voice.genapi.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.infobip.voice.genapi.connector.model.HttpHeader;
 import org.springframework.http.HttpMethod;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @AllArgsConstructor
 @Data
 @Validated
-public class ScenarioEndpoint implements Endpoint {
+public class ScenarioEndpoint implements Endpoint, Serializable {
 
     @NotNull(groups = UpdateValidation.class, message = "Cannot update Scenario Endpoint with null id")
     private Integer id;

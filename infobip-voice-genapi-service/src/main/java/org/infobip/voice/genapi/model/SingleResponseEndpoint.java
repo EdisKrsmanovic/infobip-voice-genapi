@@ -3,18 +3,20 @@ package org.infobip.voice.genapi.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.infobip.voice.genapi.connector.model.HttpHeader;
 import org.springframework.http.HttpMethod;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Validated
-public class SingleResponseEndpoint implements Endpoint {
+public class SingleResponseEndpoint implements Endpoint, Serializable {
 
     @NotNull(groups = UpdateValidation.class, message = "Cannot update Scenario Endpoint with null id")
     private Integer id;
