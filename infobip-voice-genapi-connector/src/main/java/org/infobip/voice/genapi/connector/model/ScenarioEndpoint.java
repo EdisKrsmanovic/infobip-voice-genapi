@@ -3,7 +3,6 @@ package org.infobip.voice.genapi.connector.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpMethod;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

@@ -2,13 +2,13 @@ package org.infobip.voice.genapi.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.infobip.voice.genapi.connector.model.HttpMethod;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.connector.model.HttpHeader;
 import org.infobip.voice.genapi.connector.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.repository.mapper.SingleResponseEndpointRowMapper;
 import org.infobip.voice.genapi.validator.EndpointValidator;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.rowset.SqlRowSet;

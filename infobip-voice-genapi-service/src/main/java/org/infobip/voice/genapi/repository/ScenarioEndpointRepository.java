@@ -9,7 +9,7 @@ import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.repository.mapper.ScenarioEndpointRowMapper;
 import org.infobip.voice.genapi.validator.EndpointValidator;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpMethod;
+import org.infobip.voice.genapi.connector.model.HttpMethod;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
