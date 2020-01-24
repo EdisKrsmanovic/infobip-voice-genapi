@@ -2,11 +2,11 @@ package org.infobip.voice.genapi.service;
 
 import org.infobip.voice.genapi.Application;
 import org.infobip.voice.genapi.TestConfiguration;
+import org.infobip.voice.genapi.connector.model.EndpointResponse;
 import org.infobip.voice.genapi.connector.model.GenApiResponse;
 import org.infobip.voice.genapi.exception.DatabaseException;
-import org.infobip.voice.genapi.model.EndpointResponse;
 import org.infobip.voice.genapi.connector.model.HttpHeader;
-import org.infobip.voice.genapi.model.ScenarioEndpoint;
+import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.provider.ScenarioEndpointProvider;
 import org.infobip.voice.genapi.validator.EndpointValidator;
 import org.junit.After;
@@ -87,7 +87,7 @@ public class ScenarioEndpointServiceIT {
         List<EndpointResponse> endpointResponses = List.of(new EndpointResponse("invalid"));
         GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointService.createEndpoint(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), endpointResponses));
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
-        assertThat(httpEndpointGenApiResponse.getMessage().toLowerCase()).contains("json");
+        assertThat(httpEndpointGenApiResponse.getMessage().toLowerCase()).contains("body");
     }
 
     @Test
@@ -116,12 +116,31 @@ public class ScenarioEndpointServiceIT {
         assertThat(scenarioEndpoint.getEndpointResponses().size()).isEqualTo(1);
     }
 
-    @Test(expected = ConstraintViolationException.class)
-    public void createScenarioEndpointResponseThrowsInvalidBody() {
+    @Test
+    public void createScenarioEndpointReturnsCorrectResponseOnInvalidBody() {
         ScenarioEndpoint httpEndpoint = new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>());
         scenarioEndpointService.createEndpoint(httpEndpoint);
 
-        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{response1}"));
+        GenApiResponse<EndpointResponse> scenarioEndpointResponse = scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{response1}"));
+        assertThat(scenarioEndpointResponse.getStatusCode()).isEqualTo(400);
+    }
+
+    @Test
+    public void updatingNonExistingScenarioReturns404() throws DatabaseException {
+//        Integer httpEndpointId = scenarioEndpointProvider.put(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>()));
+
+        List<EndpointResponse> endpointResponses = List.of(new EndpointResponse("invalid"));
+        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointService.updateEndpoint(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), endpointResponses));
+        assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(404);
+    }
+    @Test
+
+    public void updateWithInvalidBodyReturnsCorrectResponse() throws DatabaseException {
+        Integer httpEndpointId = scenarioEndpointProvider.put(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>()));
+
+        List<EndpointResponse> endpointResponses = List.of(new EndpointResponse("invalid"));
+        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointService.updateEndpoint(new ScenarioEndpoint(httpEndpointId, HttpMethod.GET, givenHttpHeaders(), endpointResponses));
+        assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
     }
 
     @Test

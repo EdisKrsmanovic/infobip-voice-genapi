@@ -2,11 +2,19 @@ package org.infobip.voice.genapi.connector.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EndpointResponse implements Serializable {
+
     private String body;
+    private Integer ordinalNumber;
+
+    public EndpointResponse(String body) {
+        this.body = body;
+    }
 }

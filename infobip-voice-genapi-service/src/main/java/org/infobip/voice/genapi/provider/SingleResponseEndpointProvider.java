@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
-import org.infobip.voice.genapi.model.SingleResponseEndpoint;
+import org.infobip.voice.genapi.connector.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.repository.SingleResponseEndpointRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;

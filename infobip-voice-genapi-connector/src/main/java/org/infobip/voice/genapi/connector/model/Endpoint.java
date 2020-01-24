@@ -1,4 +1,4 @@
-package org.infobip.voice.genapi.model;
+package org.infobip.voice.genapi.connector.model;
 
 import org.infobip.voice.genapi.connector.model.HttpHeader;
 import org.springframework.http.HttpMethod;

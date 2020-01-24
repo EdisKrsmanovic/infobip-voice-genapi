@@ -2,10 +2,10 @@ package org.infobip.voice.genapi.repository;
 
 import org.infobip.voice.genapi.Application;
 import org.infobip.voice.genapi.TestConfiguration;
+import org.infobip.voice.genapi.connector.model.EndpointResponse;
 import org.infobip.voice.genapi.connector.model.HttpHeader;
 import org.infobip.voice.genapi.exception.DatabaseException;
-import org.infobip.voice.genapi.model.EndpointResponse;
-import org.infobip.voice.genapi.model.ScenarioEndpoint;
+import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

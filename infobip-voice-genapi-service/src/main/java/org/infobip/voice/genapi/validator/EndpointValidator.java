@@ -1,9 +1,8 @@
 package org.infobip.voice.genapi.validator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.infobip.voice.genapi.model.Endpoint;
-import org.infobip.voice.genapi.model.JsonStringConstraint;
-import org.infobip.voice.genapi.model.ScenarioEndpoint;
+import org.infobip.voice.genapi.connector.model.Endpoint;
+import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -14,28 +13,17 @@ import java.util.Set;
 
 @Component
 @Validated
-public class EndpointValidator implements ConstraintValidator<JsonStringConstraint, String> {
+public class EndpointValidator {
 
     @Autowired
     private Validator validator;
-
-    @Override
-    public void initialize(JsonStringConstraint constraintAnnotation) {
-
-    }
-
-    @Override
-    public boolean isValid(String body, ConstraintValidatorContext constraintValidatorContext) {
-        return (isJSONValid(body));
-    }
 
     public boolean checkIfValid(@Valid Endpoint endpoint) {
         return endpoint.getResponse() == null || isJSONValid(endpoint.getResponse().getBody());
     }
 
-    //@Valid will check every response
     public boolean checkIfValidScenario(@Valid ScenarioEndpoint scenarioEndpoint) {
-        return true;
+        return scenarioEndpoint.getEndpointResponses().stream().allMatch(e -> isJSONValid(e.getBody())) || scenarioEndpoint.getEndpointResponses().size() == 0;
     }
 
     public void validate(Endpoint endpoint, Class<?>... groups) {

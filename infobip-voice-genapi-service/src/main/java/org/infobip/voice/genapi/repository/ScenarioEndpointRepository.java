@@ -2,10 +2,10 @@ package org.infobip.voice.genapi.repository;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.infobip.voice.genapi.connector.model.EndpointResponse;
 import org.infobip.voice.genapi.connector.model.HttpHeader;
 import org.infobip.voice.genapi.exception.DatabaseException;
-import org.infobip.voice.genapi.model.EndpointResponse;
-import org.infobip.voice.genapi.model.ScenarioEndpoint;
+import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.repository.mapper.ScenarioEndpointRowMapper;
 import org.infobip.voice.genapi.validator.EndpointValidator;
 import org.springframework.dao.EmptyResultDataAccessException;
