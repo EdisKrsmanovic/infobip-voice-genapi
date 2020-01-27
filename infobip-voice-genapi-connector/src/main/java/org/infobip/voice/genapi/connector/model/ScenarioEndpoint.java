@@ -25,17 +25,14 @@ public class ScenarioEndpoint implements Endpoint, Serializable {
     @Valid
     private List<EndpointResponse> endpointResponses;
 
-    private AtomicInteger nextResponseNo;
-    private LocalTime responseFirstAccessTime;
+    private AtomicInteger nextResponseNo = new AtomicInteger(0);;
+    private LocalTime responseFirstAccessTime = LocalTime.now();;
 
     public ScenarioEndpoint(Integer id, @NotNull(message = "HttpMethod cannot be null") HttpMethod httpMethod, @Valid List<HttpHeader> httpHeaders, @Valid List<EndpointResponse> endpointResponses) {
         this.id = id;
         this.httpMethod = httpMethod;
         this.httpHeaders = httpHeaders;
         this.endpointResponses = endpointResponses;
-
-        this.nextResponseNo = new AtomicInteger(0);
-        this.responseFirstAccessTime = LocalTime.now();
     }
 
     public interface UpdateValidation {
