@@ -1,4 +1,4 @@
-package org.infobip.voice.genapi;
+package org.infobip.voice.genapi.config;
 
 import org.infobip.spring.remoting.client.RmiClientInterfaceRegistrar;
 import org.springframework.context.annotation.Bean;

@@ -155,9 +155,21 @@ public class ScenarioEndpointServiceIT {
         assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 1}");
         assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 2}");
         assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 3}");
+    }
+
+    @Test
+    public void serviceThrowsWhenEveryResponseHasBeenReturned() {
+        ScenarioEndpoint httpEndpoint = new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>());
+        scenarioEndpointService.createEndpoint(httpEndpoint);
+
+        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 1}"));
+        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 2}"));
+        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 3}"));
+
         assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 1}");
         assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 2}");
         assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 3}");
+        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getStatusCode()).isEqualTo(204);
     }
 
     @Test

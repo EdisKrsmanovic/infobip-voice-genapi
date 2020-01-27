@@ -51,7 +51,7 @@
         <dependency>
             <groupId>org.infobip.voice</groupId>
             <artifactId>infobip-voice-genapi-connector</artifactId>
-            <version>1.0.11-SNAPSHOT</version>
+            <version>1.0.10</version>
         </dependency>
 
         <!-- put all your other dependencies here -->
@@ -124,6 +124,19 @@
             <artifactId>sqljdbc4</artifactId>
             <version>4.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+            <version>3.12.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-spring</artifactId>
+            <version>3.12.3</version>
+        </dependency>
+
 
     </dependencies>
 

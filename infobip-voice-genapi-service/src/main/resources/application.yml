@@ -5,6 +5,8 @@ spring.profiles.active: development
 
 server.port: 8080
 
+hazelcast.cluster.addresses: ${HAZELCAST_CLUSTER_ADDRESSES:localhost}
+
 infobip.remoting:
   server:
     autostart: false

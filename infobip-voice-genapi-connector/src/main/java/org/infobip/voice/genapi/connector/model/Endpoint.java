@@ -6,6 +6,5 @@ public interface Endpoint {
     Integer getId();
     HttpMethod getHttpMethod();
     List<HttpHeader> getHttpHeaders();
-    EndpointResponse getResponse();
     void setId(Integer id);
 }

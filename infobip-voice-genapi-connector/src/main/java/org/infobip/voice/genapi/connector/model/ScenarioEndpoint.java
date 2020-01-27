@@ -38,14 +38,6 @@ public class ScenarioEndpoint implements Endpoint, Serializable {
         this.responseFirstAccessTime = LocalTime.now();
     }
 
-    @Override
-    public EndpointResponse getResponse() {
-        if(endpointResponses.isEmpty()) return null;
-        EndpointResponse endpointResponse = endpointResponses.get(nextResponseNo.getAndIncrement());
-        nextResponseNo.set(nextResponseNo.intValue() % endpointResponses.size());
-        return endpointResponse;
-    }
-
     public interface UpdateValidation {
     }
 }
