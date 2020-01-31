@@ -43,7 +43,7 @@ public class SingleResponseEndpointProvider implements EndpointProvider<SingleRe
     }
 
     public SingleResponseEndpoint reloadId(Integer singleResponseEndpointId) {
-        log.info(String.format("Reloading cached http endpoint value with id %s", singleResponseEndpointId));
+        log.info("Reloading cached http endpoint value with id {}", singleResponseEndpointId);
         SingleResponseEndpoint singleResponseEndpoint = singleResponseEndpointRepository.getById(singleResponseEndpointId);
         cachedEndpoints.invalidate(singleResponseEndpointId);
         cachedEndpoints.put(singleResponseEndpointId, singleResponseEndpoint);

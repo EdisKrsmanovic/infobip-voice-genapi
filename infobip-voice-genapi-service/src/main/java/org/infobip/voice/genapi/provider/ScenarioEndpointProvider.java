@@ -48,7 +48,7 @@ public class ScenarioEndpointProvider implements EndpointProvider<ScenarioEndpoi
     }
 
     public ScenarioEndpoint reloadId(Integer scenarioEndpointId) {
-        log.info(String.format("Reloading cached Scenario Endpoint value with id %s", scenarioEndpointId));
+        log.info("Reloading cached Scenario Endpoint value with id {}", scenarioEndpointId);
         ScenarioEndpoint scenarioEndpoint = scenarioEndpointRepository.getById(scenarioEndpointId);
         cachedScenarioEndpoints.invalidate(scenarioEndpointId);
         cachedScenarioEndpoints.put(scenarioEndpointId, scenarioEndpoint);
@@ -85,7 +85,7 @@ public class ScenarioEndpointProvider implements EndpointProvider<ScenarioEndpoi
             scenarioEndpointRepository.save(ScenarioEndpoint.getId(), endpointResponse);
             endpointResponses.add(endpointResponse);
         } catch (ExecutionException e) {
-            log.error(String.format("Error while trying to save Scenario Endpoint response, message: %s", e.getMessage()));
+            log.error("Error while trying to save Scenario Endpoint response, message: {}", e.getMessage());
         }
     }
 

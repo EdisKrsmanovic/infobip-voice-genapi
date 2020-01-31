@@ -32,7 +32,7 @@ public class SingleResponseEndpointRepository {
 
         Map<String, Object> parameters = Map.of(
                 "HttpMethod", singleResponseEndpoint.getHttpMethod().toString(),
-                "Response", singleResponseEndpoint.getResponse());
+                "Response", singleResponseEndpoint.getResponse().getBody());
         try {
             Number singleResponseEndpointId = jdbcInsert.executeAndReturnKey(parameters);
             singleResponseEndpoint.getHttpHeaders().forEach(e -> insertHeaderToDb(singleResponseEndpointId, e));
@@ -50,7 +50,7 @@ public class SingleResponseEndpointRepository {
         } catch (EmptyResultDataAccessException e) {
             log.warn("No results found");
         } catch (Exception e) {
-            log.warn(String.format("Could not read Single Endpoint with id %s from database, message: %s", id, e.getMessage()));
+            log.warn("Could not read Single Endpoint with id {} from database, message: {}", id, e.getMessage());
         }
         return null;
     }
@@ -93,12 +93,14 @@ public class SingleResponseEndpointRepository {
         Integer singleResponseEndpointId = singleResponseEndpoint.getId();
         endpointValidator.validate(singleResponseEndpoint, SingleResponseEndpoint.UpdateValidation.class);
             try {
-                jdbcTemplate.update("UPDATE SingleResponseEndpoint SET HttpMethod = ?, Response = ?",
-                        singleResponseEndpoint.getHttpMethod().toString(), singleResponseEndpoint.getResponse().getBody());
+                jdbcTemplate.update("UPDATE SingleResponseEndpoint SET HttpMethod = ?, Response = ? WHERE Id = ?",
+                        singleResponseEndpoint.getHttpMethod().toString(),
+                        singleResponseEndpoint.getResponse().getBody(),
+                        singleResponseEndpointId);
                 jdbcTemplate.update("DELETE FROM EndpointHeader WHERE EndpointId = ? AND EndpointType = 'SingleResponse'", singleResponseEndpointId);
                 singleResponseEndpoint.getHttpHeaders().forEach(e -> insertHeaderToDb(singleResponseEndpointId, e));
             } catch (Exception e) {
-                log.error(String.format("Error while trying to save Single Response Endpoint with id %s to database, rolling back. Message: %s", singleResponseEndpointId, e.getMessage()));
+                log.error("Error while trying to save Single Response Endpoint with id {} to database, rolling back. Message: {}", singleResponseEndpointId, e.getMessage());
                 throw new DatabaseException(e.getMessage());
             }
     }
@@ -113,7 +115,7 @@ public class SingleResponseEndpointRepository {
             jdbcTemplate.update("DELETE FROM EndpointHeader WHERE EndpointId = ? AND EndpointType = 'SingleResponse'", singleResponseEndpointId);
             jdbcTemplate.update("DELETE FROM SingleResponseEndpoint WHERE Id = ?", singleResponseEndpointId);
         } catch (Exception e) {
-            log.error(String.format("Error while trying to remove Single Response Endpoint with id %s, message: %s", singleResponseEndpointId, e.getMessage()));
+            log.error("Error while trying to remove Single Response Endpoint with id {}, message: {}", singleResponseEndpointId, e.getMessage());
             throw new DatabaseException(e.getMessage());
         }
     }

@@ -60,7 +60,7 @@ public class ScenarioEndpointRepository {
         } catch (EmptyResultDataAccessException e) {
             log.warn("No results found");
         } catch (Exception e) {
-            log.warn(String.format("Could not read Scenario Endpoint with id %s from database, message: %s", id, e.getMessage()));
+            log.warn("Could not read Scenario Endpoint with id {} from database, message: {}", id, e.getMessage());
         }
         return null;
     }
@@ -99,7 +99,7 @@ public class ScenarioEndpointRepository {
             }
 
         } catch (Exception e) {
-            log.error(String.format("Error while trying to save Scenario Endpoint with id %s to database, rolling back. Message: %s", scenarioEndpointId, e.getMessage()));
+            log.error("Error while trying to save Scenario Endpoint with id {} to database, rolling back. Message: {}", scenarioEndpointId, e.getMessage());
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -141,7 +141,7 @@ public class ScenarioEndpointRepository {
             jdbcTemplate.update("DELETE FROM EndpointResponse WHERE Id = ?", scenarioEndpointId);
             jdbcTemplate.update("DELETE FROM ScenarioEndpoint WHERE Id = ?", scenarioEndpointId);
         } catch (Exception e) {
-            log.error(String.format("Error while trying to remove Scenario Endpoint with id %s, message: %s", scenarioEndpointId, e.getMessage()));
+            log.error("Error while trying to remove Scenario Endpoint with id {}, message: {}", scenarioEndpointId, e.getMessage());
             throw new DatabaseException(e.getMessage());
         }
     }

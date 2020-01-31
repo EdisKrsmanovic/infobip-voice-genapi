@@ -32,8 +32,9 @@ public class SingleResponseEndpointServiceImpl implements EndpointService<Single
     @Override
     public GenApiResponse getById(Integer singleResponseEndpointId) {
         try {
-            log.info(String.format("Received request to get an endpoint by id %d", singleResponseEndpointId));
+            log.info("Received request to get an endpoint by id {}", singleResponseEndpointId);
             SingleResponseEndpoint singleResponseEndpointById = singleResponseEndpointProvider.getById(singleResponseEndpointId);
+            log.info("Successfully returned a single response endpoint with id {}", singleResponseEndpointId);
             return generateGenApiResponse(200, "OK", singleResponseEndpointById);
         } catch (HttpEndpointNotFoundException e) {
             return generateGenApiResponse(404, "Not found", null);
@@ -41,6 +42,7 @@ public class SingleResponseEndpointServiceImpl implements EndpointService<Single
     }
 
     public GenApiResponse createEndpoint(SingleResponseEndpoint singleResponseEndpoint) {
+        log.info("Received a request to create a single response endpoint");
         int statusCode = 200;
         String message = "OK";
         try {
@@ -51,21 +53,22 @@ public class SingleResponseEndpointServiceImpl implements EndpointService<Single
             }
             else {
                 singleResponseEndpointProvider.put(singleResponseEndpoint);
+                log.info("Successfully created a single response endpoint with id {}", singleResponseEndpoint.getId());
             }
         } catch (DatabaseException exception) {
-            log.warn(String.format("Failed to save Single Response Endpoint, message: %s", exception.getMessage()));
+            log.warn("Failed to save Single Response Endpoint, message: {}", exception.getMessage());
             statusCode = 503;
             message = exception.getMessage();
         } catch (ConstraintViolationException exception) {
-            log.warn(String.format("Some info is not correct, message: %s", exception.getMessage()));
+            log.warn("Some info is not correct, message: {}", exception.getMessage());
             statusCode = 400;
             message = exception.getMessage();
         }
-        log.info(String.format("Successfully created a single response endpoint with id %d", singleResponseEndpoint.getId()));
         return generateGenApiResponse(statusCode, message, singleResponseEndpoint);
     }
 
     public GenApiResponse updateEndpoint(SingleResponseEndpoint singleResponseEndpoint) {
+        log.info("Received a request to update a single response endpoint with id {}", singleResponseEndpoint.getId());
         int statusCode = 200;
         String message = "OK";
         try {
@@ -81,17 +84,18 @@ public class SingleResponseEndpointServiceImpl implements EndpointService<Single
             }
             else {
                 singleResponseEndpointProvider.update(singleResponseEndpoint);
+                log.info("Successfully updated");
             }
         } catch (DatabaseException e) {
-            log.warn(String.format("Failed to update Single Response Endpoint, message: %s", e.getMessage()));
+            log.warn("Failed to update Single Response Endpoint, message: {}", e.getMessage());
             statusCode = 503;
             message = e.getMessage();
         } catch (HttpEndpointNotFoundException e) {
-            log.warn(String.format("Failed to update non-existing Single Response Endpoint, message: %s", e.getMessage()));
+            log.warn("Failed to update non-existing Single Response Endpoint, message: {}", e.getMessage());
             statusCode = 404;
             message = e.getMessage();
         }  catch (ConstraintViolationException exception) {
-            log.warn(String.format("Some info is not correct, message: %s", exception.getMessage()));
+            log.warn("Some info is not correct, message: {}", exception.getMessage());
             statusCode = 400;
             message = exception.getMessage();
         }

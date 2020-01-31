@@ -70,6 +70,8 @@ public class SingleResponseEndpointRepositoryIT {
     @Test
     public void updateByIdTest() throws DatabaseException {
         SingleResponseEndpoint singleResponseEndpoint = new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{body}");
+
+        singleResponseEndpointRepository.save(singleResponseEndpoint);
         Integer singleResponseEndpointId = singleResponseEndpointRepository.save(singleResponseEndpoint);
 
         singleResponseEndpoint.setId(singleResponseEndpointId);
@@ -81,11 +83,17 @@ public class SingleResponseEndpointRepositoryIT {
 
         singleResponseEndpointRepository.update(singleResponseEndpoint);
 
-        singleResponseEndpoint = singleResponseEndpointRepository.getById(singleResponseEndpointId);
+        List<SingleResponseEndpoint> singleResponseEndpoints = singleResponseEndpointRepository.getAll();
 
-        assertThat(singleResponseEndpoint.getResponse().getBody()).isEqualTo("{newBody}");
-        assertThat(singleResponseEndpoint.getHttpHeaders().get(0).getName()).isEqualTo("Novi");
-        assertThat(singleResponseEndpoint.getHttpHeaders().size()).isEqualTo(1);
+        SingleResponseEndpoint untouchedSingleResponseEndpoint = singleResponseEndpoints.get(0);
+        SingleResponseEndpoint updatedSingleResponseEndpoint = singleResponseEndpoints.get(1);
+
+        assertThat(updatedSingleResponseEndpoint.getResponse().getBody()).isEqualTo("{newBody}");
+        assertThat(updatedSingleResponseEndpoint.getHttpHeaders().get(0).getName()).isEqualTo("Novi");
+        assertThat(updatedSingleResponseEndpoint.getHttpHeaders().size()).isEqualTo(1);
+
+        assertThat(untouchedSingleResponseEndpoint.getResponse().getBody()).isEqualTo("{body}");
+        assertThat(untouchedSingleResponseEndpoint.getHttpHeaders().get(0).getName()).isEqualTo("Accept");
     }
 
     @Test(expected = ConstraintViolationException.class)

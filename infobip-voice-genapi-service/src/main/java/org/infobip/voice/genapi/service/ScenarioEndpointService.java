@@ -42,11 +42,11 @@ public class ScenarioEndpointService implements EndpointService<ScenarioEndpoint
                 scenarioEndpointProvider.put(scenarioEndpoint);
             }
         } catch (DatabaseException exception) {
-            log.warn(String.format("Failed to save Scenario Endpoint, message: %s", exception.getMessage()));
+            log.warn("Failed to save Scenario Endpoint, message: {}", exception.getMessage());
             statusCode = 503;
             message = exception.getMessage();
         } catch (ConstraintViolationException exception) {
-            log.warn(String.format("Some info is not correct, message: %s", exception.getMessage()));
+            log.warn("Some info is not correct, message: {}", exception.getMessage());
             statusCode = 400;
             message = exception.getMessage();
         }
@@ -78,15 +78,15 @@ public class ScenarioEndpointService implements EndpointService<ScenarioEndpoint
                 scenarioEndpointProvider.update(scenarioEndpoint);
             }
         } catch (DatabaseException e) {
-            log.warn(String.format("Failed to update Scenario Endpoint, message: %s", e.getMessage()));
+            log.warn("Failed to update Scenario Endpoint, message: {}", e.getMessage());
             statusCode = 503;
             message = e.getMessage();
         } catch (HttpEndpointNotFoundException e) {
-            log.warn(String.format("Failed to update non-existing Scenario Endpoint, message: %s", e.getMessage()));
+            log.warn("Failed to update non-existing Scenario Endpoint, message: {}", e.getMessage());
             statusCode = 404;
             message = e.getMessage();
         } catch (ConstraintViolationException exception) {
-            log.warn(String.format("Some info is not correct, message: %s", exception.getMessage()));
+            log.warn("Some info is not correct, message: {}", exception.getMessage());
             statusCode = 400;
             message = exception.getMessage();
         }
@@ -105,11 +105,11 @@ public class ScenarioEndpointService implements EndpointService<ScenarioEndpoint
                 scenarioEndpointProvider.put(scenarioEndpointId, endpointResponse);
             }
         } catch (HttpEndpointNotFoundException e) {
-            log.warn(String.format("Scenario Endpoint not found, message: %s", e.getMessage()));
+            log.warn("Scenario Endpoint not found, message: {}", e.getMessage());
             statusCode = 404;
             message = "Not found";
         } catch (ConstraintViolationException exception) {
-            log.warn(String.format("Some info is not correct, message: %s", exception.getMessage()));
+            log.warn("Some info is not correct, message: {}", exception.getMessage());
             statusCode = 400;
             message = exception.getMessage();
         }
