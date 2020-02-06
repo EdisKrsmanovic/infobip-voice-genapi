@@ -1,4 +1,4 @@
-create table EndpointResponse
+create table dbo.EndpointResponse
 (
     Id            int identity
         constraint PK_ResponseEndpoint

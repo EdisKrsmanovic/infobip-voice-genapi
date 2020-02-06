@@ -1,4 +1,4 @@
-create table ScenarioEndpoint
+create table dbo.ScenarioEndpoint
 (
     Id         int identity
         constraint PK_ScenarioEndpoint

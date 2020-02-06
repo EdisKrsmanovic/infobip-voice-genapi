@@ -1,4 +1,4 @@
-create table EndpointHeader
+create table dbo.EndpointHeader
 (
     Id           int identity
         constraint PK_EndpointHeader

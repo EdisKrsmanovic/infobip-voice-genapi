@@ -13,6 +13,7 @@
         <docker.fromImage>${docker.registry}/infobip-docker-java:alpine-openjdk11-3.2.10</docker.fromImage>
         <docker.skipBuild>false</docker.skipBuild>
         <docker.mainClass>org/infobip/voice/Application</docker.mainClass>
+        <infobip-secret-spring-injector.version>RELEASE</infobip-secret-spring-injector.version>
     </properties>
 
     <dependencyManagement>
@@ -137,6 +138,11 @@
             <version>3.12.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.infobip.security</groupId>
+            <artifactId>infobip-secret-spring-injector</artifactId>
+            <version>${infobip-secret-spring-injector.version}</version>
+        </dependency>
 
     </dependencies>
 

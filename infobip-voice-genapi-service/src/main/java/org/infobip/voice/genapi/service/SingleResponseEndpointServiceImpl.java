@@ -30,7 +30,7 @@ public class SingleResponseEndpointServiceImpl implements EndpointService<Single
     private EndpointValidator endpointValidator;
 
     @Override
-    public GenApiResponse getById(Integer singleResponseEndpointId) {
+    public GenApiResponse<SingleResponseEndpoint> getById(Integer singleResponseEndpointId) {
         try {
             log.info("Received request to get an endpoint by id {}", singleResponseEndpointId);
             SingleResponseEndpoint singleResponseEndpointById = singleResponseEndpointProvider.getById(singleResponseEndpointId);
@@ -41,7 +41,7 @@ public class SingleResponseEndpointServiceImpl implements EndpointService<Single
         }
     }
 
-    public GenApiResponse createEndpoint(SingleResponseEndpoint singleResponseEndpoint) {
+    public GenApiResponse<SingleResponseEndpoint> createEndpoint(SingleResponseEndpoint singleResponseEndpoint) {
         log.info("Received a request to create a single response endpoint");
         int statusCode = 200;
         String message = "OK";
@@ -67,7 +67,7 @@ public class SingleResponseEndpointServiceImpl implements EndpointService<Single
         return generateGenApiResponse(statusCode, message, singleResponseEndpoint);
     }
 
-    public GenApiResponse updateEndpoint(SingleResponseEndpoint singleResponseEndpoint) {
+    public GenApiResponse<SingleResponseEndpoint> updateEndpoint(SingleResponseEndpoint singleResponseEndpoint) {
         log.info("Received a request to update a single response endpoint with id {}", singleResponseEndpoint.getId());
         int statusCode = 200;
         String message = "OK";
