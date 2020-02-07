@@ -3,7 +3,7 @@
     <parent>
         <artifactId>infobip-voice-genapi</artifactId>
         <groupId>org.infobip.voice</groupId>
-        <version>1.0.21-SNAPSHOT</version>
+        <version>1.0.22-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>org.infobip.voice</groupId>
             <artifactId>infobip-voice-genapi-connector</artifactId>
-            <version>1.0.21-SNAPSHOT</version>
+            <version>1.0.22-SNAPSHOT</version>
         </dependency>
 
         <!-- put all your other dependencies here -->
