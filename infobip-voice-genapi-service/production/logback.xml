@@ -34,22 +34,6 @@
         </filter>
     </appender>
 
-    <appender name="SMTP" class="ch.qos.logback.classic.net.SMTPAppender">
-        <smtpHost>LOG_SMTP_HOST</smtpHost>
-        <from>LOG_SMTP_FROM</from>
-        <to>LOG_SMTP_TO</to>
-        <subject>LOG_SMTP_SUBJECT</subject>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>${FILE_LOG_PATTERN}</pattern>
-        </layout>
-        <cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker">
-            <bufferSize>1</bufferSize>
-        </cyclicBufferTracker>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
-    </appender>
-
     <logger name="org.infobip" level="WARN" />
     <logger name="org.infobip.voice" level="DEBUG" />
     <logger name="org.infobip.asterisk" level="DEBUG" />
@@ -82,7 +66,6 @@
     <root level="DEBUG">
         <appender-ref ref="FILEOUT"/>
         <appender-ref ref="FILEERR"/>
-        <appender-ref ref="SMTP"/>
     </root>
 
 </configuration>
