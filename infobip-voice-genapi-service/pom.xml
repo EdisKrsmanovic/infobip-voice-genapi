@@ -53,7 +53,7 @@
         <dependency>
             <groupId>org.infobip.voice</groupId>
             <artifactId>infobip-voice-genapi-connector</artifactId>
-            <version>1.0.31-SNAPSHOT</version>
+            <version>1.0.30</version>
         </dependency>
 
         <!-- put all your other dependencies here -->
@@ -230,6 +230,12 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>4.0.3</version>
             </plugin>
         </plugins>
     </build>
