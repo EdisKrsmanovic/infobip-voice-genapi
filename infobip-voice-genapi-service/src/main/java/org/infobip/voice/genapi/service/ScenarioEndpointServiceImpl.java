@@ -3,11 +3,14 @@ package org.infobip.voice.genapi.service;
 import com.hazelcast.core.IMap;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.infobip.spring.remoting.server.export.Export;
+import org.infobip.validation.api.ValidatedRmiService;
 import org.infobip.voice.genapi.connector.model.EndpointResponse;
 import org.infobip.voice.genapi.connector.model.GenApiResponse;
+import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
+import org.infobip.voice.genapi.connector.service.ScenarioEndpointService;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
-import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.provider.ScenarioEndpointProvider;
 import org.infobip.voice.genapi.validator.EndpointValidator;
 import org.springframework.stereotype.Service;
@@ -20,7 +23,9 @@ import java.util.List;
 @Service
 @Validated
 @AllArgsConstructor
-public class ScenarioEndpointService implements EndpointService<ScenarioEndpoint> {
+@Export(ScenarioEndpointService.class)
+@ValidatedRmiService(ScenarioEndpointService.class)
+public class ScenarioEndpointServiceImpl implements EndpointService<ScenarioEndpoint>, ScenarioEndpointService {
 
     private ScenarioEndpointProvider scenarioEndpointProvider;
 
@@ -49,6 +54,7 @@ public class ScenarioEndpointService implements EndpointService<ScenarioEndpoint
             log.warn("Some info is not correct, message: {}", exception.getMessage());
             statusCode = 400;
             message = exception.getMessage();
+            scenarioEndpoint = null;
         }
         return generateGenApiResponse(statusCode, message, scenarioEndpoint);
     }

@@ -30,12 +30,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-public class ScenarioEndpointServiceIT {
+public class ScenarioEndpointServiceImplIT {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ScenarioEndpointService scenarioEndpointService;
+    private ScenarioEndpointServiceImpl scenarioEndpointServiceImpl;
 
     @Autowired
     private ScenarioEndpointProvider scenarioEndpointProvider;
@@ -60,14 +60,14 @@ public class ScenarioEndpointServiceIT {
     @Test
     public void createHttpEndpointSavesHeadersInAnotherTable() {
         Integer numberOfHeadersBefore = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM EndpointHeader", Integer.class);
-        scenarioEndpointService.createEndpoint(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>()));
+        scenarioEndpointServiceImpl.createEndpoint(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>()));
         Integer numberOfHeadersAfter = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM EndpointHeader", Integer.class);
         assertThat(numberOfHeadersBefore).isEqualTo(numberOfHeadersAfter - 3);
     }
 
     @Test
     public void nullHttpMethodReturnsCorrectResponse() {
-        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointService.createEndpoint(new ScenarioEndpoint(null, null, givenHttpHeaders(), new ArrayList<>()));
+        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointServiceImpl.createEndpoint(new ScenarioEndpoint(null, null, givenHttpHeaders(), new ArrayList<>()));
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
         assertThat(httpEndpointGenApiResponse.getMessage().toLowerCase()).contains("method");
     }
@@ -76,7 +76,7 @@ public class ScenarioEndpointServiceIT {
     public void invalidHeadersReturnsCorrectResponse() {
         List<HttpHeader> headers = givenHttpHeaders();
         headers.get(0).setName("");
-        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointService.createEndpoint(new ScenarioEndpoint(null, HttpMethod.GET, headers, new ArrayList<>()));
+        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointServiceImpl.createEndpoint(new ScenarioEndpoint(null, HttpMethod.GET, headers, new ArrayList<>()));
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
         assertThat(httpEndpointGenApiResponse.getMessage().toLowerCase()).contains("name");
     }
@@ -84,7 +84,7 @@ public class ScenarioEndpointServiceIT {
     @Test
     public void invalidBodyReturnsCorrectResponse() {
         List<EndpointResponse> endpointResponses = List.of(new EndpointResponse("invalid"));
-        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointService.createEndpoint(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), endpointResponses));
+        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointServiceImpl.createEndpoint(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), endpointResponses));
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
         assertThat(httpEndpointGenApiResponse.getMessage().toLowerCase()).contains("body");
     }
@@ -93,14 +93,14 @@ public class ScenarioEndpointServiceIT {
     public void getByIdReturns200IfFound() throws DatabaseException {
         Integer httpEndpointId = scenarioEndpointProvider.put(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>()));
 
-        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointService.getById(httpEndpointId);
+        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointServiceImpl.getById(httpEndpointId);
 
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(200);
     }
 
     @Test
     public void getByIdReturns404IfNotFound() {
-        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointService.getById(0);
+        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointServiceImpl.getById(0);
 
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(404);
     }
@@ -108,9 +108,9 @@ public class ScenarioEndpointServiceIT {
     @Test
     public void createHttpResponseAddsResponseToList() {
         ScenarioEndpoint scenarioEndpoint = new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>());
-        scenarioEndpointService.createEndpoint(scenarioEndpoint);
+        scenarioEndpointServiceImpl.createEndpoint(scenarioEndpoint);
 
-        scenarioEndpointService.createScenarioEndpointResponse(scenarioEndpoint.getId(), new EndpointResponse("{\"response\": \"asd\"}"));
+        scenarioEndpointServiceImpl.createScenarioEndpointResponse(scenarioEndpoint.getId(), new EndpointResponse("{\"response\": \"asd\"}"));
 
         assertThat(scenarioEndpoint.getEndpointResponses().size()).isEqualTo(1);
     }
@@ -118,9 +118,9 @@ public class ScenarioEndpointServiceIT {
     @Test
     public void createScenarioEndpointReturnsCorrectResponseOnInvalidBody() {
         ScenarioEndpoint httpEndpoint = new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>());
-        scenarioEndpointService.createEndpoint(httpEndpoint);
+        scenarioEndpointServiceImpl.createEndpoint(httpEndpoint);
 
-        GenApiResponse<EndpointResponse> scenarioEndpointResponse = scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{response1}"));
+        GenApiResponse<EndpointResponse> scenarioEndpointResponse = scenarioEndpointServiceImpl.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{response1}"));
         assertThat(scenarioEndpointResponse.getStatusCode()).isEqualTo(400);
     }
 
@@ -129,7 +129,7 @@ public class ScenarioEndpointServiceIT {
 //        Integer httpEndpointId = scenarioEndpointProvider.put(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>()));
 
         List<EndpointResponse> endpointResponses = List.of(new EndpointResponse("invalid"));
-        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointService.updateEndpoint(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), endpointResponses));
+        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointServiceImpl.updateEndpoint(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), endpointResponses));
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(404);
     }
     @Test
@@ -138,37 +138,37 @@ public class ScenarioEndpointServiceIT {
         Integer httpEndpointId = scenarioEndpointProvider.put(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>()));
 
         List<EndpointResponse> endpointResponses = List.of(new EndpointResponse("invalid"));
-        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointService.updateEndpoint(new ScenarioEndpoint(httpEndpointId, HttpMethod.GET, givenHttpHeaders(), endpointResponses));
+        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointServiceImpl.updateEndpoint(new ScenarioEndpoint(httpEndpointId, HttpMethod.GET, givenHttpHeaders(), endpointResponses));
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
     }
 
     @Test
     public void serviceReturnsResponsesCyclically() {
         ScenarioEndpoint httpEndpoint = new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>());
-        scenarioEndpointService.createEndpoint(httpEndpoint);
+        scenarioEndpointServiceImpl.createEndpoint(httpEndpoint);
 
-        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 1}"));
-        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 2}"));
-        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 3}"));
+        scenarioEndpointServiceImpl.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 1}"));
+        scenarioEndpointServiceImpl.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 2}"));
+        scenarioEndpointServiceImpl.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 3}"));
 
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 1}");
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 2}");
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 3}");
+        assertThat(scenarioEndpointServiceImpl.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 1}");
+        assertThat(scenarioEndpointServiceImpl.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 2}");
+        assertThat(scenarioEndpointServiceImpl.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 3}");
     }
 
     @Test
     public void serviceThrowsWhenEveryResponseHasBeenReturned() {
         ScenarioEndpoint httpEndpoint = new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>());
-        scenarioEndpointService.createEndpoint(httpEndpoint);
+        scenarioEndpointServiceImpl.createEndpoint(httpEndpoint);
 
-        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 1}"));
-        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 2}"));
-        scenarioEndpointService.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 3}"));
+        scenarioEndpointServiceImpl.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 1}"));
+        scenarioEndpointServiceImpl.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 2}"));
+        scenarioEndpointServiceImpl.createScenarioEndpointResponse(httpEndpoint.getId(), new EndpointResponse("{\"response1\": 3}"));
 
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 1}");
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 2}");
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 3}");
-        assertThat(scenarioEndpointService.getNextResponse(httpEndpoint.getId()).getStatusCode()).isEqualTo(204);
+        assertThat(scenarioEndpointServiceImpl.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 1}");
+        assertThat(scenarioEndpointServiceImpl.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 2}");
+        assertThat(scenarioEndpointServiceImpl.getNextResponse(httpEndpoint.getId()).getEntity().getBody()).isEqualTo("{\"response1\": 3}");
+        assertThat(scenarioEndpointServiceImpl.getNextResponse(httpEndpoint.getId()).getStatusCode()).isEqualTo(204);
     }
 
     @Test
@@ -180,7 +180,7 @@ public class ScenarioEndpointServiceIT {
                 new EndpointResponse("invalid"));
 
         ScenarioEndpoint scenarioEndpoint = new ScenarioEndpoint(null, HttpMethod.GET, Collections.emptyList(), endpointResponses);
-        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointService.createEndpoint(scenarioEndpoint);
+        GenApiResponse<ScenarioEndpoint> httpEndpointGenApiResponse = scenarioEndpointServiceImpl.createEndpoint(scenarioEndpoint);
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
     }
 
