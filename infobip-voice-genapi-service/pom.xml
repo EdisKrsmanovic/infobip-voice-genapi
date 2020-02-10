@@ -14,6 +14,7 @@
         <docker.skipBuild>false</docker.skipBuild>
         <docker.mainClass>org/infobip/voice/Application</docker.mainClass>
         <infobip-secret-spring-injector.version>RELEASE</infobip-secret-spring-injector.version>
+        <infobip-spring-bean-validation-boot-starter.version>1.5.1</infobip-spring-bean-validation-boot-starter.version>
     </properties>
 
     <dependencyManagement>
@@ -144,6 +145,11 @@
             <version>${infobip-secret-spring-injector.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.infobip.common</groupId>
+            <artifactId>infobip-spring-bean-validation-boot-starter</artifactId>
+            <version>${infobip-spring-bean-validation-boot-starter.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

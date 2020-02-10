@@ -3,13 +3,14 @@ package org.infobip.voice.genapi.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.infobip.spring.remoting.server.export.Export;
+import org.infobip.validation.api.ValidatedRmiService;
 import org.infobip.voice.genapi.connector.model.EndpointResponse;
 import org.infobip.voice.genapi.connector.model.GenApiResponse;
 import org.infobip.voice.genapi.connector.model.HttpHeader;
+import org.infobip.voice.genapi.connector.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.connector.service.SingleResponseEndpointService;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
-import org.infobip.voice.genapi.connector.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.provider.SingleResponseEndpointProvider;
 import org.infobip.voice.genapi.validator.EndpointValidator;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 @Slf4j
 @Service
 @Export(SingleResponseEndpointService.class)
+@ValidatedRmiService(SingleResponseEndpointService.class)
 @Validated
 @AllArgsConstructor
 public class SingleResponseEndpointServiceImpl implements EndpointService<SingleResponseEndpoint>, SingleResponseEndpointService {
