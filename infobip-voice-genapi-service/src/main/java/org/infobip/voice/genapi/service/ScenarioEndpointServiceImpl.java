@@ -43,7 +43,10 @@ public class ScenarioEndpointServiceImpl implements EndpointService<ScenarioEndp
                 message = "One of the given responses body is invalid";
             } else {
                 List<EndpointResponse> endpointResponses = scenarioEndpoint.getEndpointResponses();
-                endpointResponses.forEach(e -> e.setOrdinalNumber(endpointResponses.indexOf(e)));
+                if(endpointResponses.stream().anyMatch(e -> e.getOrdinalNumber() == null)) {
+                    endpointResponses.forEach(e -> e.setOrdinalNumber(endpointResponses.indexOf(e)));
+                    message = "OK, all ordinal numbers set to their order in given array";
+                }
                 scenarioEndpointProvider.put(scenarioEndpoint);
             }
         } catch (DatabaseException exception) {
@@ -81,6 +84,11 @@ public class ScenarioEndpointServiceImpl implements EndpointService<ScenarioEndp
                 statusCode = 400;
                 message = "One of the responses of given scenario endpoint has invalid body";
             } else {
+                List<EndpointResponse> endpointResponses = scenarioEndpoint.getEndpointResponses();
+                if(endpointResponses.stream().anyMatch(e -> e.getOrdinalNumber() == null)) {
+                    endpointResponses.forEach(e -> e.setOrdinalNumber(endpointResponses.indexOf(e)));
+                    message = "OK, all ordinal numbers set to their order in given array";
+                }
                 scenarioEndpointProvider.update(scenarioEndpoint);
             }
         } catch (DatabaseException e) {

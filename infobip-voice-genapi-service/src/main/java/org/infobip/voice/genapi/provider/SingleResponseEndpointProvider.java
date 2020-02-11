@@ -77,6 +77,7 @@ public class SingleResponseEndpointProvider implements EndpointProvider<SingleRe
 
     public void update(SingleResponseEndpoint singleResponseEndpoint) throws DatabaseException {
         singleResponseEndpointRepository.update(singleResponseEndpoint);
+        reloadId(singleResponseEndpoint.getId());
     }
 
     public long size() {

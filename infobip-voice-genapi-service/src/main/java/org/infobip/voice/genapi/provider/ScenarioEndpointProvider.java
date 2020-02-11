@@ -100,6 +100,7 @@ public class ScenarioEndpointProvider implements EndpointProvider<ScenarioEndpoi
 
     public void update(ScenarioEndpoint scenarioEndpoint) throws DatabaseException {
         scenarioEndpointRepository.update(scenarioEndpoint);
+        reloadId(scenarioEndpoint.getId());
     }
 
     public long size() {
