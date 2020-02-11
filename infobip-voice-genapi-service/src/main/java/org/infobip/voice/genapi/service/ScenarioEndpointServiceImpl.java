@@ -90,6 +90,7 @@ public class ScenarioEndpointServiceImpl implements EndpointService<ScenarioEndp
                     message = "OK, all ordinal numbers set to their order in given array";
                 }
                 scenarioEndpointProvider.update(scenarioEndpoint);
+                nextResponseMap.set(scenarioEndpoint.getId(), scenarioEndpoint.getNextResponseNo().intValue());
             }
         } catch (DatabaseException e) {
             log.warn("Failed to update Scenario Endpoint, message: {}", e.getMessage());
@@ -142,7 +143,7 @@ public class ScenarioEndpointServiceImpl implements EndpointService<ScenarioEndp
         if (nextResponseIndex == null) {
             nextResponseMap.put(scenarioEndpointId, 0);
             nextResponseIndex = 0;
-        } else if (nextResponseIndex == scenarioEndpoint.getEndpointResponses().size()) {
+        } else if (nextResponseIndex >= scenarioEndpoint.getEndpointResponses().size()) {
             return generateGenApiResponse(204, "No more responses", null);
         }
         EndpointResponse endpointResponse = scenarioEndpoint.getEndpointResponses().get(nextResponseIndex);
