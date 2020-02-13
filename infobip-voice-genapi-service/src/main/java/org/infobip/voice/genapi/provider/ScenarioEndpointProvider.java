@@ -80,7 +80,7 @@ public class ScenarioEndpointProvider implements EndpointProvider<ScenarioEndpoi
 
             List<EndpointResponse> endpointResponses = ScenarioEndpoint.getEndpointResponses();
 
-            endpointResponse.setOrdinalNumber(endpointResponses.size() + 1);
+            endpointResponse.setOrdinalNumber(endpointResponses.size());
 
             scenarioEndpointRepository.save(ScenarioEndpoint.getId(), endpointResponse);
             endpointResponses.add(endpointResponse);
