@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Data
 @Slf4j
@@ -112,7 +113,7 @@ public class ScenarioEndpointProvider implements EndpointProvider<ScenarioEndpoi
         ScenarioEndpoint oldScenarioEndpoint = oldScenarioEndpointsMap.get(newScenarioEndpoint.getId());
         if (oldScenarioEndpoint != null) {
             if (ChronoUnit.MINUTES.between(oldScenarioEndpoint.getResponseFirstAccessTime(), LocalTime.now()) > 5) {
-                newScenarioEndpoint.getNextResponseNo().set(0);
+                newScenarioEndpoint.setNextResponseNo(new AtomicInteger(0));
                 newScenarioEndpoint.setResponseFirstAccessTime(LocalTime.now());
             } else {
                 newScenarioEndpoint.setNextResponseNo(oldScenarioEndpoint.getNextResponseNo());
