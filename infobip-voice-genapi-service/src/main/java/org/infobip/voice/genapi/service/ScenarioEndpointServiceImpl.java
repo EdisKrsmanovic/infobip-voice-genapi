@@ -43,9 +43,11 @@ public class ScenarioEndpointServiceImpl implements EndpointService<ScenarioEndp
                 message = "One of the given responses body is invalid";
             } else {
                 List<EndpointResponse> endpointResponses = scenarioEndpoint.getEndpointResponses();
-                if(endpointResponses.stream().anyMatch(e -> e.getOrdinalNumber() == null)) {
+                if (endpointResponses.stream().anyMatch(e -> e.getOrdinalNumber() == null)) {
                     endpointResponses.forEach(e -> e.setOrdinalNumber(endpointResponses.indexOf(e)));
                     message = "OK, all ordinal numbers set to their order in given array";
+                } else {
+                    endpointResponses.sort(this::sortByOrdinalNumbers);
                 }
                 scenarioEndpointProvider.put(scenarioEndpoint);
             }
@@ -85,7 +87,7 @@ public class ScenarioEndpointServiceImpl implements EndpointService<ScenarioEndp
                 message = "One of the responses of given scenario endpoint has invalid body";
             } else {
                 List<EndpointResponse> endpointResponses = scenarioEndpoint.getEndpointResponses();
-                if(endpointResponses.stream().anyMatch(e -> e.getOrdinalNumber() == null)) {
+                if (endpointResponses.stream().anyMatch(e -> e.getOrdinalNumber() == null)) {
                     endpointResponses.forEach(e -> e.setOrdinalNumber(endpointResponses.indexOf(e)));
                     message = "OK, all ordinal numbers set to their order in given array";
                 }
@@ -150,6 +152,10 @@ public class ScenarioEndpointServiceImpl implements EndpointService<ScenarioEndp
 
         nextResponseMap.put(scenarioEndpointId, nextResponseIndex + 1);
         return generateGenApiResponse(200, "OK", endpointResponse);
+    }
+
+    private int sortByOrdinalNumbers(EndpointResponse endpointResponse1, EndpointResponse endpointResponse2) {
+        return endpointResponse1.getOrdinalNumber().compareTo(endpointResponse2.getOrdinalNumber());
     }
 
     private <T> GenApiResponse<T> generateGenApiResponse(Integer statusCode, String message, T entity) {
