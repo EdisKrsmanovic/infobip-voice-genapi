@@ -7,6 +7,7 @@ import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.provider.ScenarioEndpointProvider;
 import org.infobip.voice.genapi.repository.ScenarioEndpointRepository;
 import org.infobip.voice.genapi.validator.EndpointValidator;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,12 +50,12 @@ public class ScenarioEndpointServiceImplIT {
         jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
     }
 
-//    @After
-//    public void afterEveryTest() {
-//        jdbcTemplate.update("DELETE FROM EndpointHeader");
-//        jdbcTemplate.update("DELETE FROM EndpointResponse");
-//        jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
-//    }
+    @After
+    public void afterEveryTest() {
+        jdbcTemplate.update("DELETE FROM EndpointHeader");
+        jdbcTemplate.update("DELETE FROM EndpointResponse");
+        jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
+    }
 
     @Test
     public void createHttpEndpointSavesHeadersInAnotherTable() {

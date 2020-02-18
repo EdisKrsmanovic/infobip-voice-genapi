@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -134,22 +135,29 @@ public class ScenarioEndpointServiceImpl implements EndpointService<ScenarioEndp
     public GenApiResponse<EndpointResponse> getNextResponse(Integer scenarioEndpointId) {
         GenApiResponse<ScenarioEndpoint> genApiResponse = getById(scenarioEndpointId);
         ScenarioEndpoint scenarioEndpoint = genApiResponse.getEntity();
+        if (scenarioEndpoint != null) {
+            nextResponseMap.set(scenarioEndpointId, scenarioEndpoint.getNextResponseNo().intValue());
 
-        if (scenarioEndpoint.getEndpointResponses().isEmpty()) {
-            return generateGenApiResponse(404, String.format("No responses found for Scenario Endpoint with id %s", scenarioEndpointId), null);
+            if (scenarioEndpoint.getEndpointResponses().isEmpty()) {
+                return generateGenApiResponse(404, String.format("No responses found for Scenario Endpoint with id %s", scenarioEndpointId), null);
+            }
+
+            Integer nextResponseIndex = nextResponseMap.get(scenarioEndpointId);
+            if (nextResponseIndex == null) {
+                nextResponseMap.put(scenarioEndpointId, 0);
+                scenarioEndpoint.setNextResponseNo(new AtomicInteger(0));
+                nextResponseIndex = 0;
+            } else if (nextResponseIndex >= scenarioEndpoint.getEndpointResponses().size()) {
+                return generateGenApiResponse(204, "No more responses", null);
+            }
+            EndpointResponse endpointResponse = scenarioEndpoint.getEndpointResponses().get(nextResponseIndex);
+
+            nextResponseMap.put(scenarioEndpointId, nextResponseIndex + 1);
+            scenarioEndpoint.getNextResponseNo().incrementAndGet();
+            return generateGenApiResponse(200, "OK", endpointResponse);
+        } else {
+            return generateGenApiResponse(404, String.format("Scenario endpoint with id %d not found", scenarioEndpointId), null);
         }
-
-        Integer nextResponseIndex = nextResponseMap.get(scenarioEndpointId);
-        if (nextResponseIndex == null) {
-            nextResponseMap.put(scenarioEndpointId, 0);
-            nextResponseIndex = 0;
-        } else if (nextResponseIndex >= scenarioEndpoint.getEndpointResponses().size()) {
-            return generateGenApiResponse(204, "No more responses", null);
-        }
-        EndpointResponse endpointResponse = scenarioEndpoint.getEndpointResponses().get(nextResponseIndex);
-
-        nextResponseMap.put(scenarioEndpointId, nextResponseIndex + 1);
-        return generateGenApiResponse(200, "OK", endpointResponse);
     }
 
     private <T> GenApiResponse<T> generateGenApiResponse(Integer statusCode, String message, T entity) {
