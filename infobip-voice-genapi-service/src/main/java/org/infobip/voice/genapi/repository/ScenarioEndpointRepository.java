@@ -106,7 +106,7 @@ public class ScenarioEndpointRepository {
 
     private boolean shouldUpdateResponses(ScenarioEndpoint scenarioEndpoint, Integer scenarioEndpointId) {
         boolean responsesMismatch = false;
-        List<EndpointResponse> endpointResponses = jdbcTemplate.query(String.format("Select Body, OrdinalNumber from EndpointResponse where EndpointId=%d", scenarioEndpointId), new BeanPropertyRowMapper<>(EndpointResponse.class));
+        List<EndpointResponse> endpointResponses = jdbcTemplate.query(String.format("Select Body, OrdinalNumber from EndpointResponse where EndpointId=%d ORDER BY OrdinalNumber", scenarioEndpointId), new BeanPropertyRowMapper<>(EndpointResponse.class));
         if (endpointResponses.size() != scenarioEndpoint.getEndpointResponses().size()) responsesMismatch = true;
         else {
             if (scenarioEndpoint.getEndpointResponses().stream().anyMatch(e -> !endpointResponses.contains(e)))
@@ -174,7 +174,7 @@ public class ScenarioEndpointRepository {
     }
 
     private void readResponses(Map<Integer, ScenarioEndpoint> scenarioEndpointMap) {
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from ScenarioEndpoint left join EndpointResponse on ScenarioEndpoint.Id = EndpointResponse.EndpointId");
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from ScenarioEndpoint left join EndpointResponse on ScenarioEndpoint.Id = EndpointResponse.EndpointId ORDER BY OrdinalNumber");
         while (sqlRowSet.next()) {
             int scenarioEndpointId = sqlRowSet.getInt("Id");
             String body = sqlRowSet.getString("Body");

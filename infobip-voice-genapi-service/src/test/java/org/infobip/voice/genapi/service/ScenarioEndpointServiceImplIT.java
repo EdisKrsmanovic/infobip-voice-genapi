@@ -2,21 +2,17 @@ package org.infobip.voice.genapi.service;
 
 import org.infobip.voice.genapi.Application;
 import org.infobip.voice.genapi.TestConfiguration;
-import org.infobip.voice.genapi.connector.model.EndpointResponse;
-import org.infobip.voice.genapi.connector.model.GenApiResponse;
+import org.infobip.voice.genapi.connector.model.*;
 import org.infobip.voice.genapi.exception.DatabaseException;
-import org.infobip.voice.genapi.connector.model.HttpHeader;
-import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.provider.ScenarioEndpointProvider;
+import org.infobip.voice.genapi.repository.ScenarioEndpointRepository;
 import org.infobip.voice.genapi.validator.EndpointValidator;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.infobip.voice.genapi.connector.model.HttpMethod;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -38,6 +34,9 @@ public class ScenarioEndpointServiceImplIT {
     private ScenarioEndpointServiceImpl scenarioEndpointServiceImpl;
 
     @Autowired
+    private ScenarioEndpointRepository scenarioEndpointRepository;
+
+    @Autowired
     private ScenarioEndpointProvider scenarioEndpointProvider;
 
     @SpyBean
@@ -50,12 +49,12 @@ public class ScenarioEndpointServiceImplIT {
         jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
     }
 
-    @After
-    public void afterEveryTest() {
-        jdbcTemplate.update("DELETE FROM EndpointHeader");
-        jdbcTemplate.update("DELETE FROM EndpointResponse");
-        jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
-    }
+//    @After
+//    public void afterEveryTest() {
+//        jdbcTemplate.update("DELETE FROM EndpointHeader");
+//        jdbcTemplate.update("DELETE FROM EndpointResponse");
+//        jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
+//    }
 
     @Test
     public void createHttpEndpointSavesHeadersInAnotherTable() {
@@ -184,9 +183,34 @@ public class ScenarioEndpointServiceImplIT {
         assertThat(httpEndpointGenApiResponse.getStatusCode()).isEqualTo(400);
     }
 
+    @Test
+    public void endpointResponsesAreSortedByOrdinalNumbers() throws DatabaseException {
+        Integer scenarioEndpointId = scenarioEndpointRepository.save(new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), givenEndpointResponses()));
+
+        scenarioEndpointProvider.reloadAll();
+
+        assertThat(scenarioEndpointServiceImpl.getNextResponse(scenarioEndpointId).getEntity().getBody()).isEqualTo("{\"body\": \"This should be 1st\"");
+        assertThat(scenarioEndpointServiceImpl.getNextResponse(scenarioEndpointId).getEntity().getBody()).isEqualTo("{\"body\": \"This should be 2nd\"");
+        assertThat(scenarioEndpointServiceImpl.getNextResponse(scenarioEndpointId).getEntity().getBody()).isEqualTo("{\"body\": \"This should be 3rd\"");
+        assertThat(scenarioEndpointServiceImpl.getNextResponse(scenarioEndpointId).getEntity().getBody()).isEqualTo("{\"body\": \"This should be 4th\"");
+        assertThat(scenarioEndpointServiceImpl.getNextResponse(scenarioEndpointId).getEntity().getBody()).isEqualTo("{\"body\": \"This should be 5th\"");
+    }
+
     private List<HttpHeader> givenHttpHeaders() {
-        return List.of(new HttpHeader("Accept", "text/html"),
+        return List.of(
+                new HttpHeader("Accept", "text/html"),
                 new HttpHeader("Keep-Alive", "300"),
-                new HttpHeader("Connection", "keep-alive"));
+                new HttpHeader("Connection", "keep-alive")
+        );
+    }
+
+    private List<EndpointResponse> givenEndpointResponses() {
+        return List.of(
+                new EndpointResponse("{\"body\": \"This should be 2nd\"", 2),
+                new EndpointResponse("{\"body\": \"This should be 4th\"", 4),
+                new EndpointResponse("{\"body\": \"This should be 3rd\"", 3),
+                new EndpointResponse("{\"body\": \"This should be 5th\"", 5),
+                new EndpointResponse("{\"body\": \"This should be 1st\"", 1)
+        );
     }
 }
