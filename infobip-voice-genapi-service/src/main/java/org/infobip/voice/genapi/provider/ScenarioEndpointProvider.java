@@ -6,9 +6,9 @@ import com.google.common.cache.LoadingCache;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.infobip.voice.genapi.connector.model.EndpointResponse;
+import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
-import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.repository.ScenarioEndpointRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -42,7 +42,7 @@ public class ScenarioEndpointProvider implements EndpointProvider<ScenarioEndpoi
     public long reloadAll() {
         log.info("Reloading cached Scenario Endpoint values");
         List<ScenarioEndpoint> scenarioEndpoints = scenarioEndpointRepository.getAll();
-        ConcurrentMap<Integer, ScenarioEndpoint> oldScenarioEndpointsMap = cachedScenarioEndpoints.asMap();
+        HashMap<Integer, ScenarioEndpoint> oldScenarioEndpointsMap = new HashMap<>(cachedScenarioEndpoints.asMap());
         cachedScenarioEndpoints.invalidateAll();
         scenarioEndpoints.forEach(e -> cacheAndCheckNextResponseNumber(oldScenarioEndpointsMap, e));
         return scenarioEndpoints.size();
@@ -108,7 +108,7 @@ public class ScenarioEndpointProvider implements EndpointProvider<ScenarioEndpoi
         return cachedScenarioEndpoints.size();
     }
 
-    private void cacheAndCheckNextResponseNumber(ConcurrentMap<Integer, ScenarioEndpoint> oldScenarioEndpointsMap, ScenarioEndpoint newScenarioEndpoint) {
+    private void cacheAndCheckNextResponseNumber(HashMap<Integer, ScenarioEndpoint> oldScenarioEndpointsMap, ScenarioEndpoint newScenarioEndpoint) {
         cachedScenarioEndpoints.put(newScenarioEndpoint.getId(), newScenarioEndpoint);
         ScenarioEndpoint oldScenarioEndpoint = oldScenarioEndpointsMap.get(newScenarioEndpoint.getId());
         if (oldScenarioEndpoint != null) {

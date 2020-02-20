@@ -153,7 +153,7 @@ public class ScenarioEndpointServiceImpl implements EndpointService<ScenarioEndp
             EndpointResponse endpointResponse = scenarioEndpoint.getEndpointResponses().get(nextResponseIndex);
 
             nextResponseMap.put(scenarioEndpointId, nextResponseIndex + 1);
-            scenarioEndpoint.setNextResponseNo(new AtomicInteger(scenarioEndpoint.getNextResponseNo().intValue()+1));
+            scenarioEndpoint.getNextResponseNo().incrementAndGet();
             return generateGenApiResponse(200, "OK", endpointResponse);
         } else {
             return generateGenApiResponse(404, String.format("Scenario endpoint with id %d not found", scenarioEndpointId), null);
