@@ -15,7 +15,7 @@ infobip.remoting:
 spring:
   datasource:
     driverClassName: net.sourceforge.jtds.jdbc.Driver
-    url: jdbc:jtds:sqlserver://FR-OTHER-2.ancotel.local:1433/GenApiDB;useNTLMv2=true;domain=ancotel.local
+    url: DATABASE_USER
     username: DATABASE_USER
     password: DATABASE_PASSWORD
   flyway:
