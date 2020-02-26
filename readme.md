@@ -6,5 +6,4 @@ Use this [project](https://git.ib-ci.com/projects/SKY/repos/infobip-voice-genapi
 
 For development you will need a database named `infobip_voice_genapi_${user.name}`
 
-For integration tests you will need a database named `infobip_voice_genapi_integration_${user.name}` (just change jdbc.database name in the project above)
-
+Integration tests will remove all data from this database
