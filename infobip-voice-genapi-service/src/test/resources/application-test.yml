@@ -15,8 +15,3 @@ spring:
     url: jdbc:jtds:sqlserver://sql-sa-test.infobip.local:1433/infobip_voice_genapi_integration_${user.name}
     username: voip
     password: voip
-  flyway:
-    baseline-on-migrate: true
-    schemas: dbo
-    enabled: true
-
