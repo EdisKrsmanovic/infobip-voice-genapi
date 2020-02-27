@@ -112,7 +112,7 @@ public class ScenarioEndpointProvider implements EndpointProvider<ScenarioEndpoi
         cachedScenarioEndpoints.put(newScenarioEndpoint.getId(), newScenarioEndpoint);
         ScenarioEndpoint oldScenarioEndpoint = oldScenarioEndpointsMap.get(newScenarioEndpoint.getId());
         if (oldScenarioEndpoint != null) {
-            if (ChronoUnit.MINUTES.between(oldScenarioEndpoint.getResponseFirstAccessTime(), LocalTime.now()) > 5) {
+            if (ChronoUnit.SECONDS.between(oldScenarioEndpoint.getResponseFirstAccessTime(), LocalTime.now()) > 30) {
                 newScenarioEndpoint.setNextResponseNo(new AtomicInteger(0));
                 newScenarioEndpoint.setResponseFirstAccessTime(LocalTime.now());
             } else {
