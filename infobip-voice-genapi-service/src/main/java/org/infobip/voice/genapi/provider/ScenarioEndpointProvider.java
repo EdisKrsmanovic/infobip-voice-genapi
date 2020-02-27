@@ -40,7 +40,7 @@ public class ScenarioEndpointProvider implements EndpointProvider<ScenarioEndpoi
             });
 
     public long reloadAll() {
-        log.info("Reloading cached Scenario Endpoint values");
+        log.debug("Reloading cached Scenario Endpoint values");
         List<ScenarioEndpoint> scenarioEndpoints = scenarioEndpointRepository.getAll();
         HashMap<Integer, ScenarioEndpoint> oldScenarioEndpointsMap = new HashMap<>(cachedScenarioEndpoints.asMap());
         cachedScenarioEndpoints.invalidateAll();
@@ -49,7 +49,7 @@ public class ScenarioEndpointProvider implements EndpointProvider<ScenarioEndpoi
     }
 
     public ScenarioEndpoint reloadId(Integer scenarioEndpointId) {
-        log.info("Reloading cached Scenario Endpoint value with id {}", scenarioEndpointId);
+        log.debug("Reloading cached Scenario Endpoint value with id {}", scenarioEndpointId);
         ScenarioEndpoint scenarioEndpoint = scenarioEndpointRepository.getById(scenarioEndpointId);
         cachedScenarioEndpoints.invalidate(scenarioEndpointId);
         cachedScenarioEndpoints.put(scenarioEndpointId, scenarioEndpoint);
@@ -122,7 +122,7 @@ public class ScenarioEndpointProvider implements EndpointProvider<ScenarioEndpoi
         }
     }
 
-    @Scheduled(fixedDelay = 60000) //every minute
+    @Scheduled(fixedDelay = 10000) //every minute
     private void startCaching() {
         this.reloadAll();
     }
