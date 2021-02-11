@@ -1,9 +1,8 @@
 package org.infobip.voice.genapi.service;
 
 import org.infobip.voice.genapi.Application;
-import org.infobip.voice.genapi.TestConfiguration;
-import org.infobip.voice.genapi.connector.model.*;
 import org.infobip.voice.genapi.exception.DatabaseException;
+import org.infobip.voice.genapi.model.*;
 import org.infobip.voice.genapi.provider.ScenarioEndpointProvider;
 import org.infobip.voice.genapi.repository.ScenarioEndpointRepository;
 import org.infobip.voice.genapi.validator.EndpointValidator;
@@ -24,7 +23,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 public class ScenarioEndpointServiceImplIT {

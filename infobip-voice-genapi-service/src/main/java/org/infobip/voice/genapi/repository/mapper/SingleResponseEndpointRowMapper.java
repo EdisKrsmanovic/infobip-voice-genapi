@@ -1,9 +1,9 @@
 package org.infobip.voice.genapi.repository.mapper;
 
 import lombok.extern.slf4j.Slf4j;
-import org.infobip.voice.genapi.connector.model.HttpHeader;
-import org.infobip.voice.genapi.connector.model.SingleResponseEndpoint;
-import org.infobip.voice.genapi.connector.model.HttpMethod;
+import org.infobip.voice.genapi.model.HttpHeader;
+import org.infobip.voice.genapi.model.HttpMethod;
+import org.infobip.voice.genapi.model.SingleResponseEndpoint;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

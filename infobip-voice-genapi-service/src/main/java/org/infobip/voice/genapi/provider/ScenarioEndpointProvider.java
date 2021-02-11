@@ -5,12 +5,11 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.infobip.voice.genapi.connector.model.EndpointResponse;
-import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
+import org.infobip.voice.genapi.model.EndpointResponse;
+import org.infobip.voice.genapi.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.repository.ScenarioEndpointRepository;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -34,7 +33,7 @@ public class ScenarioEndpointProvider implements EndpointProvider<ScenarioEndpoi
     private LoadingCache<Integer, ScenarioEndpoint> cachedScenarioEndpoints = CacheBuilder.newBuilder()
             .build(new CacheLoader<>() {
                 @Override
-                public ScenarioEndpoint load(@NotNull Integer scenarioEndpointId) {
+                public ScenarioEndpoint load(Integer scenarioEndpointId) {
                     return null;
                 }
             });

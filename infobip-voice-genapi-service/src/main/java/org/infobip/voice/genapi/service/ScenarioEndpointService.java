@@ -1,8 +1,9 @@
-package org.infobip.voice.genapi.connector.service;
+package org.infobip.voice.genapi.service;
 
-import org.infobip.voice.genapi.connector.model.EndpointResponse;
-import org.infobip.voice.genapi.connector.model.GenApiResponse;
-import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
+
+import org.infobip.voice.genapi.model.EndpointResponse;
+import org.infobip.voice.genapi.model.GenApiResponse;
+import org.infobip.voice.genapi.model.ScenarioEndpoint;
 
 public interface ScenarioEndpointService {
     /**

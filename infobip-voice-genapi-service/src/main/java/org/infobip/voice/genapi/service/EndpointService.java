@@ -1,6 +1,7 @@
 package org.infobip.voice.genapi.service;
 
-import org.infobip.voice.genapi.connector.model.GenApiResponse;
+
+import org.infobip.voice.genapi.model.GenApiResponse;
 
 public interface EndpointService<T> {
     GenApiResponse<T> createEndpoint(T endpoint);

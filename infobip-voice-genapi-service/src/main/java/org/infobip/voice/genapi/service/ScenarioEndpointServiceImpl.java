@@ -3,14 +3,13 @@ package org.infobip.voice.genapi.service;
 import com.hazelcast.core.IMap;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.infobip.spring.remoting.server.export.Export;
-import org.infobip.validation.api.ValidatedRmiService;
-import org.infobip.voice.genapi.connector.model.EndpointResponse;
-import org.infobip.voice.genapi.connector.model.GenApiResponse;
-import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
-import org.infobip.voice.genapi.connector.service.ScenarioEndpointService;
+//import org.infobip.spring.remoting.server.export.Export;
+//import org.infobip.validation.api.ValidatedRmiService;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
+import org.infobip.voice.genapi.model.EndpointResponse;
+import org.infobip.voice.genapi.model.GenApiResponse;
+import org.infobip.voice.genapi.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.provider.ScenarioEndpointProvider;
 import org.infobip.voice.genapi.validator.EndpointValidator;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 @Validated
 @AllArgsConstructor
-@Export(ScenarioEndpointService.class)
-@ValidatedRmiService(ScenarioEndpointService.class)
+//@Export(ScenarioEndpointService.class)
+//@ValidatedRmiService(ScenarioEndpointService.class)
 public class ScenarioEndpointServiceImpl implements EndpointService<ScenarioEndpoint>, ScenarioEndpointService {
 
     private ScenarioEndpointProvider scenarioEndpointProvider;

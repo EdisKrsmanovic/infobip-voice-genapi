@@ -1,4 +1,4 @@
-package org.infobip.voice.genapi.connector.model;
+package org.infobip.voice.genapi.model;
 
 public enum HttpMethod {
     GET,

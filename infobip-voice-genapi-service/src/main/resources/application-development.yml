@@ -5,15 +5,15 @@
 # - setting various URLs to those in the integration environment
 #
 
-infobip.remoting:
-  server:
-    autostart: true # automatically start RMI server (this should be set to false in production; Deployment Manager will start your server)
-    properties:
-      http:
-        rmi:
-          enabled: true
-          remoting.endpoint: "http://localhost:${server.port}/rmi"
-          root.remoting.path: /,/rmi
+#infobip.remoting:
+#  server:
+#    autostart: true # automatically start RMI server (this should be set to false in production; Deployment Manager will start your server)
+#    properties:
+#      http:
+#        rmi:
+#          enabled: true
+#          remoting.endpoint: "http://localhost:${server.port}/rmi"
+#          root.remoting.path: /,/rmi
 
 
 spring:

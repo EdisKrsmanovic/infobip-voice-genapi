@@ -1,9 +1,9 @@
 package org.infobip.voice.genapi.validator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.infobip.voice.genapi.connector.model.Endpoint;
-import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
-import org.infobip.voice.genapi.connector.model.SingleResponseEndpoint;
+import org.infobip.voice.genapi.model.Endpoint;
+import org.infobip.voice.genapi.model.ScenarioEndpoint;
+import org.infobip.voice.genapi.model.SingleResponseEndpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;

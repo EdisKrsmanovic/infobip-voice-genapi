@@ -1,11 +1,11 @@
 package org.infobip.voice.genapi.service;
 
 import org.infobip.voice.genapi.Application;
-import org.infobip.voice.genapi.TestConfiguration;
-import org.infobip.voice.genapi.connector.model.GenApiResponse;
-import org.infobip.voice.genapi.connector.model.HttpHeader;
 import org.infobip.voice.genapi.exception.DatabaseException;
-import org.infobip.voice.genapi.connector.model.SingleResponseEndpoint;
+import org.infobip.voice.genapi.model.GenApiResponse;
+import org.infobip.voice.genapi.model.HttpHeader;
+import org.infobip.voice.genapi.model.HttpMethod;
+import org.infobip.voice.genapi.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.provider.SingleResponseEndpointProvider;
 import org.junit.After;
 import org.junit.Before;
@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.infobip.voice.genapi.connector.model.HttpMethod;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,7 +21,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 public class SingleResponseEndpointServiceIT {

@@ -10,11 +10,14 @@
     <artifactId>infobip-voice-genapi-service</artifactId>
 
     <properties>
-        <docker.fromImage>${docker.registry}/infobip-docker-java:alpine-openjdk11-3.2.10</docker.fromImage>
-        <docker.skipBuild>false</docker.skipBuild>
-        <docker.mainClass>org/infobip/voice/Application</docker.mainClass>
-        <infobip-secret-spring-injector.version>RELEASE</infobip-secret-spring-injector.version>
-        <infobip-spring-bean-validation-boot-starter.version>1.5.1</infobip-spring-bean-validation-boot-starter.version>
+        <java.version>11</java.version>
+<!--        <docker.fromImage>${docker.registry}/infobip-docker-java:alpine-openjdk11-3.2.10</docker.fromImage>-->
+<!--        <docker.skipBuild>false</docker.skipBuild>-->
+<!--        <docker.mainClass>org/infobip/voice/Application</docker.mainClass>-->
+<!--        <infobip-secret-spring-injector.version>RELEASE</infobip-secret-spring-injector.version>-->
+<!--        <infobip-spring-bean-validation-boot-starter.version>1.5.1</infobip-spring-bean-validation-boot-starter.version>-->
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencyManagement>
@@ -42,19 +45,19 @@
             </exclusions>
         </dependency>
 
-        <!-- SPRING BOOT INFOBIP -->
-        <dependency>
-            <groupId>org.infobip.common.remoting</groupId>
-            <artifactId>infobip-remoting-spring-boot-starter</artifactId>
-            <version>${infobip-remoting.version}</version>
-        </dependency>
+<!--        &lt;!&ndash; SPRING BOOT INFOBIP &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.infobip.common.remoting</groupId>-->
+<!--            <artifactId>infobip-remoting-spring-boot-starter</artifactId>-->
+<!--            <version>${infobip-remoting.version}</version>-->
+<!--        </dependency>-->
 
-        <!-- CONNECTOR -->
-        <dependency>
-            <groupId>org.infobip.voice</groupId>
-            <artifactId>infobip-voice-genapi-connector</artifactId>
-            <version>1.1.2-SNAPSHOT</version>
-        </dependency>
+<!--        &lt;!&ndash; CONNECTOR &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.infobip.voice</groupId>-->
+<!--            <artifactId>infobip-voice-genapi-connector</artifactId>-->
+<!--            <version>1.1.2-SNAPSHOT</version>-->
+<!--        </dependency>-->
 
         <!-- put all your other dependencies here -->
 
@@ -117,8 +120,8 @@
 
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
-            <artifactId>sqljdbc4</artifactId>
-            <version>4.0</version>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>6.1.0.jre8</version>
         </dependency>
 
         <dependency>
@@ -132,18 +135,23 @@
             <artifactId>hazelcast-spring</artifactId>
             <version>3.12.3</version>
         </dependency>
-
         <dependency>
-            <groupId>org.infobip.security</groupId>
-            <artifactId>infobip-secret-spring-injector</artifactId>
-            <version>${infobip-secret-spring-injector.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.infobip.common</groupId>
-            <artifactId>infobip-spring-bean-validation-boot-starter</artifactId>
-            <version>${infobip-spring-bean-validation-boot-starter.version}</version>
-        </dependency>
+        <!--        <dependency>-->
+<!--            <groupId>org.infobip.security</groupId>-->
+<!--            <artifactId>infobip-secret-spring-injector</artifactId>-->
+<!--            <version>${infobip-secret-spring-injector.version}</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.infobip.common</groupId>-->
+<!--            <artifactId>infobip-spring-bean-validation-boot-starter</artifactId>-->
+<!--            <version>${infobip-spring-bean-validation-boot-starter.version}</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

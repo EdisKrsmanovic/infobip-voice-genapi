@@ -7,9 +7,8 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
-import org.infobip.voice.genapi.connector.model.SingleResponseEndpoint;
+import org.infobip.voice.genapi.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.repository.SingleResponseEndpointRepository;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -29,7 +28,7 @@ public class SingleResponseEndpointProvider implements EndpointProvider<SingleRe
     private LoadingCache<Integer, SingleResponseEndpoint> cachedEndpoints = CacheBuilder.newBuilder()
             .build(new CacheLoader<>() {
                 @Override
-                public SingleResponseEndpoint load(@NotNull Integer singleResponseEndpointId) {
+                public SingleResponseEndpoint load(Integer singleResponseEndpointId) {
                     return null;
                 }
             });

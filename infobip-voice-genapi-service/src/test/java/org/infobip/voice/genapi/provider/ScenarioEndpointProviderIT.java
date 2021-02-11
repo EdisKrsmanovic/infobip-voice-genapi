@@ -1,11 +1,11 @@
 package org.infobip.voice.genapi.provider;
 
 import org.infobip.voice.genapi.Application;
-import org.infobip.voice.genapi.TestConfiguration;
-import org.infobip.voice.genapi.connector.model.HttpHeader;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
-import org.infobip.voice.genapi.connector.model.ScenarioEndpoint;
+import org.infobip.voice.genapi.model.HttpHeader;
+import org.infobip.voice.genapi.model.HttpMethod;
+import org.infobip.voice.genapi.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.repository.ScenarioEndpointRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.infobip.voice.genapi.connector.model.HttpMethod;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -27,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest(classes = {Application.class, TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 public class ScenarioEndpointProviderIT {
