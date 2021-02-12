@@ -6,15 +6,13 @@ import org.infobip.voice.genapi.model.EndpointResponse;
 import org.infobip.voice.genapi.model.HttpHeader;
 import org.infobip.voice.genapi.model.HttpMethod;
 import org.infobip.voice.genapi.model.ScenarioEndpoint;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
@@ -22,10 +20,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 public class ScenarioEndpointRepositoryIT {
 
     @Autowired
@@ -34,14 +32,14 @@ public class ScenarioEndpointRepositoryIT {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Before
+    @BeforeEach
     public void beforeEveryTest() {
         jdbcTemplate.update("DELETE FROM EndpointHeader");
         jdbcTemplate.update("DELETE FROM EndpointResponse");
         jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
     }
 
-    @After
+    @AfterEach
     public void afterEveryTest() {
         jdbcTemplate.update("DELETE FROM EndpointHeader");
         jdbcTemplate.update("DELETE FROM EndpointResponse");
@@ -87,10 +85,11 @@ public class ScenarioEndpointRepositoryIT {
         assertThat(scenarioEndpoint.getHttpHeaders().size()).isEqualTo(1);
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void updateWithNullId() throws DatabaseException {
         ScenarioEndpoint scenarioEndpoint = new ScenarioEndpoint(null, HttpMethod.GET, givenHttpHeaders(), new ArrayList<>());
-        scenarioEndpointRepository.update(scenarioEndpoint);
+        assertThrows(ConstraintViolationException.class, () ->
+                scenarioEndpointRepository.update(scenarioEndpoint));
     }
 
     @Test

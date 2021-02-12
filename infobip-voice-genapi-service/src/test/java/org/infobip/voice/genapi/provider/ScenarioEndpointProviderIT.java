@@ -7,17 +7,15 @@ import org.infobip.voice.genapi.model.HttpHeader;
 import org.infobip.voice.genapi.model.HttpMethod;
 import org.infobip.voice.genapi.model.ScenarioEndpoint;
 import org.infobip.voice.genapi.repository.ScenarioEndpointRepository;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +26,6 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 public class ScenarioEndpointProviderIT {
 
     @Autowired
@@ -40,7 +37,7 @@ public class ScenarioEndpointProviderIT {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Before
+    @BeforeEach
     public void beforeEveryTest() {
         Mockito.clearInvocations(scenarioEndpointRepository);
         jdbcTemplate.update("DELETE FROM EndpointHeader");
@@ -48,7 +45,7 @@ public class ScenarioEndpointProviderIT {
         jdbcTemplate.update("DELETE FROM ScenarioEndpoint");
     }
 
-    @After
+    @AfterEach
     public void afterEveryTest() {
         jdbcTemplate.update("DELETE FROM EndpointHeader");
         jdbcTemplate.update("DELETE FROM EndpointResponse");

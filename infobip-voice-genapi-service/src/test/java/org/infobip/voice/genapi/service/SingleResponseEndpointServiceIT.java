@@ -7,15 +7,13 @@ import org.infobip.voice.genapi.model.HttpHeader;
 import org.infobip.voice.genapi.model.HttpMethod;
 import org.infobip.voice.genapi.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.provider.SingleResponseEndpointProvider;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
@@ -23,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 public class SingleResponseEndpointServiceIT {
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -34,13 +31,13 @@ public class SingleResponseEndpointServiceIT {
     @Autowired
     private SingleResponseEndpointProvider singleResponseEndpointProvider;
 
-    @Before
+    @BeforeEach
     public void beforeEveryTest() {
         jdbcTemplate.update("DELETE FROM EndpointHeader");
         jdbcTemplate.update("DELETE FROM SingleResponseEndpoint");
     }
 
-    @After
+    @AfterEach
     public void afterEveryTest() {
         jdbcTemplate.update("DELETE FROM EndpointHeader");
         jdbcTemplate.update("DELETE FROM SingleResponseEndpoint");

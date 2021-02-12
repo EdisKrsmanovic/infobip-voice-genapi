@@ -30,7 +30,7 @@ public class ScenarioEndpointRepository {
 
     @Transactional(rollbackFor = DatabaseException.class)
     public Integer save(ScenarioEndpoint scenarioEndpoint) throws DatabaseException {
-        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("ScenarioEndpoint").withSchemaName("dbo").usingGeneratedKeyColumns("Id");
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("ScenarioEndpoint").usingGeneratedKeyColumns("Id");
 
         Map<String, Object> parameters = Map.of(
                 "HttpMethod", scenarioEndpoint.getHttpMethod().toString());

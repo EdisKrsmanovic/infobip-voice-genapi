@@ -28,7 +28,7 @@ public class SingleResponseEndpointRepository {
 
     @Transactional(rollbackFor = DatabaseException.class)
     public Integer save(SingleResponseEndpoint singleResponseEndpoint) throws DatabaseException {
-        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("SingleResponseEndpoint").withSchemaName("dbo").usingGeneratedKeyColumns("Id");
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("SingleResponseEndpoint").usingGeneratedKeyColumns("Id");
 
         Map<String, Object> parameters = Map.of(
                 "HttpMethod", singleResponseEndpoint.getHttpMethod().toString(),

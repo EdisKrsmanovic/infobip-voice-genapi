@@ -6,15 +6,13 @@ import org.infobip.voice.genapi.model.EndpointResponse;
 import org.infobip.voice.genapi.model.HttpHeader;
 import org.infobip.voice.genapi.model.HttpMethod;
 import org.infobip.voice.genapi.model.SingleResponseEndpoint;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
@@ -22,10 +20,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 public class SingleResponseEndpointRepositoryIT {
 
     @Autowired
@@ -34,13 +32,13 @@ public class SingleResponseEndpointRepositoryIT {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Before
+    @BeforeEach
     public void beforeEveryTest() {
         jdbcTemplate.update("DELETE FROM EndpointHeader");
         jdbcTemplate.update("DELETE FROM SingleResponseEndpoint");
     }
 
-    @After
+    @AfterEach
     public void afterEveryTest() {
         jdbcTemplate.update("DELETE FROM EndpointHeader");
         jdbcTemplate.update("DELETE FROM SingleResponseEndpoint");
@@ -92,13 +90,13 @@ public class SingleResponseEndpointRepositoryIT {
         assertThat(updatedSingleResponseEndpoint.getHttpHeaders().size()).isEqualTo(1);
 
         assertThat(untouchedSingleResponseEndpoint.getResponse().getBody()).isEqualTo("{body}");
-        assertThat(untouchedSingleResponseEndpoint.getHttpHeaders().get(0).getName()).isEqualTo("Accept");
+        assertThat(untouchedSingleResponseEndpoint.getHttpHeaders().size()).isEqualTo(3);
     }
 
-    @Test(expected = ConstraintViolationException.class)
+    @Test
     public void updateWithNullId() throws DatabaseException {
         SingleResponseEndpoint singleResponseEndpoint = new SingleResponseEndpoint(null, HttpMethod.GET, givenHttpHeaders(), "{body}");
-        singleResponseEndpointRepository.update(singleResponseEndpoint);
+        assertThrows(ConstraintViolationException.class, () -> singleResponseEndpointRepository.update(singleResponseEndpoint));
     }
 
     @Test
