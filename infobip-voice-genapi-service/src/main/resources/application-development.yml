@@ -5,20 +5,13 @@
 # - setting various URLs to those in the integration environment
 #
 
-#infobip.remoting:
-#  server:
-#    autostart: true # automatically start RMI server (this should be set to false in production; Deployment Manager will start your server)
-#    properties:
-#      http:
-#        rmi:
-#          enabled: true
-#          remoting.endpoint: "http://localhost:${server.port}/rmi"
-#          root.remoting.path: /,/rmi
-
-
 spring:
   datasource:
-    driverClassName: net.sourceforge.jtds.jdbc.Driver
-    url: jdbc:jtds:sqlserver://sql-sa-test.infobip.local:1433/infobip_voice_genapi_${user.name}
-    username: voip
-    password: voip
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/genapi?useSSL=false
+    username: root
+    password: counter
+  flyway:
+    url: jdbc:mysql://localhost:3306/genapi?useSSL=false
+    user: root
+    password: counter

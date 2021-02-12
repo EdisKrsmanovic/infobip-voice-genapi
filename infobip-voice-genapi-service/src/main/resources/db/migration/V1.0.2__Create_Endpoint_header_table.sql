@@ -1,8 +1,6 @@
-create table dbo.EndpointHeader
+create table EndpointHeader
 (
-    Id           int identity
-        constraint PK_EndpointHeader
-            primary key,
+    Id           int primary key,
     EndpointId   int          not null,
     Name         varchar(128) not null,
     Value        varchar(512) not null,
