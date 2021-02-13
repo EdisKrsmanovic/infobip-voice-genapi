@@ -3,8 +3,6 @@ package org.infobip.voice.genapi.service;
 import com.hazelcast.core.IMap;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-//import org.infobip.spring.remoting.server.export.Export;
-//import org.infobip.validation.api.ValidatedRmiService;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
 import org.infobip.voice.genapi.model.EndpointResponse;
@@ -23,8 +21,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 @Validated
 @AllArgsConstructor
-//@Export(ScenarioEndpointService.class)
-//@ValidatedRmiService(ScenarioEndpointService.class)
 public class ScenarioEndpointServiceImpl implements EndpointService<ScenarioEndpoint>, ScenarioEndpointService {
 
     private ScenarioEndpointProvider scenarioEndpointProvider;

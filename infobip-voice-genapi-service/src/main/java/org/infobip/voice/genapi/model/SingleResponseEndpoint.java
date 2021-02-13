@@ -29,7 +29,6 @@ public class SingleResponseEndpoint implements Endpoint, Serializable {
         this.response = new EndpointResponse(responseBody);
     }
 
-
     public interface UpdateValidation {
     }
 }

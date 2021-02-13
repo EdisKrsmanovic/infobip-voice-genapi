@@ -2,8 +2,6 @@ package org.infobip.voice.genapi.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-//import org.infobip.spring.remoting.server.export.Export;
-//import org.infobip.validation.api.ValidatedRmiService;
 import org.infobip.voice.genapi.exception.DatabaseException;
 import org.infobip.voice.genapi.exception.HttpEndpointNotFoundException;
 import org.infobip.voice.genapi.model.EndpointResponse;
@@ -20,15 +18,13 @@ import java.util.ArrayList;
 
 @Slf4j
 @Service
-//@Export(SingleResponseEndpointService.class)
-//@ValidatedRmiService(SingleResponseEndpointService.class)
 @Validated
 @AllArgsConstructor
 public class SingleResponseEndpointServiceImpl implements EndpointService<SingleResponseEndpoint>, SingleResponseEndpointService {
 
-    private SingleResponseEndpointProvider singleResponseEndpointProvider;
+    private final SingleResponseEndpointProvider singleResponseEndpointProvider;
 
-    private EndpointValidator endpointValidator;
+    private final EndpointValidator endpointValidator;
 
     @Override
     public GenApiResponse<SingleResponseEndpoint> getById(Integer singleResponseEndpointId) {
@@ -104,23 +100,10 @@ public class SingleResponseEndpointServiceImpl implements EndpointService<Single
     }
 
     private GenApiResponse<SingleResponseEndpoint> generateGenApiResponse(Integer statusCode, String message, SingleResponseEndpoint singleResponseEndpoint) {
-        SingleResponseEndpoint singleResponseEndpointEntity = null;
-
-        if(singleResponseEndpoint != null) {
-            ArrayList<HttpHeader> httpHeaders = new ArrayList<>();
-            singleResponseEndpoint.getHttpHeaders().forEach(e -> httpHeaders.add(new HttpHeader(e.getName(), e.getValue())));
-            singleResponseEndpointEntity = new SingleResponseEndpoint(
-                    singleResponseEndpoint.getId(),
-                    singleResponseEndpoint.getHttpMethod(),
-                    httpHeaders,
-                    new EndpointResponse(singleResponseEndpoint.getResponse().getBody())
-            );
-        }
-
         return GenApiResponse.<SingleResponseEndpoint>builder()
                 .statusCode(statusCode)
                 .message(message)
-                .entity(singleResponseEndpointEntity)
+                .entity(singleResponseEndpoint)
                 .build();
     }
 }
