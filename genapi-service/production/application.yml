@@ -1,17 +1,9 @@
-#See https://confluence.infobip.com/display/IT/Remoting+Library+Documentation properties section
-#JVM properties can be specified in docker/etc/app/jvm.conf
-
 spring.profiles.active: development
 
 server.port: HTTP_SERVER_PORT
 
 hazelcast.cluster.addresses: ${HAZELCAST_CLUSTER_ADDRESSES:localhost}
 
-infobip.remoting:
-  server:
-    autostart: false
-    properties:
-      mml.rmi.enabled: false
 spring:
   datasource:
     driverClassName: net.sourceforge.jtds.jdbc.Driver
