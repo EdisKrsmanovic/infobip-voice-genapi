@@ -1,0 +1,12 @@
+spring.profiles.active: development
+
+server.port: HTTP_SERVER_PORT
+
+hazelcast.cluster.addresses: ${HAZELCAST_CLUSTER_ADDRESSES:localhost}
+
+spring:
+  datasource:
+    driverClassName: net.sourceforge.jtds.jdbc.Driver
+    url: jdbc:jtds:sqlserver://FR-OTHER-2.ancotel.local:1433/GenApiDB;useNTLMv2=true;domain=ancotel.local
+    username: DATABASE_USER
+    password: DATABASE_PASSWORD

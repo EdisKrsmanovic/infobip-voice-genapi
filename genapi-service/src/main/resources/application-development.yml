@@ -1,0 +1,17 @@
+#
+# The properties defined here will be applied on top of those from application.yml if the active profile is "development".
+#
+# Practical usage:
+# - setting various URLs to those in the integration environment
+#
+
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/genapi?useSSL=false
+    username: root
+    password: counter
+  flyway:
+    url: jdbc:mysql://localhost:3306/genapi?useSSL=false
+    user: root
+    password: counter
