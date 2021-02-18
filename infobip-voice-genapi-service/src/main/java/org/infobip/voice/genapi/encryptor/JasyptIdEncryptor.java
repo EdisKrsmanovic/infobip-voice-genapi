@@ -27,7 +27,7 @@ public class JasyptIdEncryptor {
             String encryptedString = decodeUsingGuava(encryptedHex);
             return Integer.valueOf(basicTextEncryptor.decrypt(encryptedString));
         } catch (Exception e) {
-            throw new InvalidIdException("Invalid id given, unable to decode it!");
+            throw new InvalidIdException("Invalid id");
         }
     }
 

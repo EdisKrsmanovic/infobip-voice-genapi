@@ -7,7 +7,13 @@ import org.infobip.voice.genapi.model.GenApiResponse;
 import org.infobip.voice.genapi.model.SingleResponseEndpoint;
 import org.infobip.voice.genapi.model.SingleResponseEndpointWrapper;
 import org.infobip.voice.genapi.service.SingleResponseEndpointService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("endpoint")
@@ -37,6 +43,28 @@ public class SingleResponseEndpointController {
                     .entity(null)
                     .message(e.getMessage())
                     .build();
+        }
+    }
+
+    @RequestMapping(path = "getResponse/{id}", produces = "application/json")
+    public ResponseEntity<String> getEndpointResponseById(@PathVariable("id") String encryptedId, final HttpServletRequest request) {
+        try {
+            Integer decryptedId = jasyptIdEncryptor.decryptId(encryptedId);
+            GenApiResponse<SingleResponseEndpoint> serviceResponse = singleResponseEndpointService.getById(decryptedId);
+
+            if(!serviceResponse.getEntity().getHttpMethod().toString().equalsIgnoreCase(request.getMethod())) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Endpoint not found (check your http method)");
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            serviceResponse
+                    .getEntity()
+                    .getHttpHeaders()
+                    .forEach(header -> headers.add(header.getName(), header.getValue()));
+
+            return new ResponseEntity<>(serviceResponse.getEntity().getResponse().getBody(), headers, HttpStatus.OK);
+        } catch (InvalidIdException e) {
+            return new ResponseEntity<>("{\"message\": \"" + e.getMessage() + "\"}", null, HttpStatus.BAD_REQUEST);
         }
     }
 
